@@ -1,0 +1,124 @@
+<div class="info-page">
+  <div class="info-page__inner">
+
+    <div class="info-hero">
+      <p class="info-eyebrow">✦ NamakwaChic</p>
+      <h1>Size Guide</h1>
+      <p>{{ content.sizingIntro || 'Find your perfect fit. All measurements are in centimetres (cm). When between sizes, we recommend sizing up.' }}</p>
+    </div>
+
+    <!-- How to Measure -->
+    <div class="info-section">
+      <h2>How to Measure Yourself</h2>
+      <div class="info-measure-grid">
+        <div class="info-measure-card">
+          <div class="info-measure-card__icon">📏</div>
+          <h4>Bust</h4>
+          <p>{{ content.sizingHowToBust || 'Measure around the fullest part of your chest, keeping the tape parallel to the floor.' }}</p>
+        </div>
+        <div class="info-measure-card">
+          <div class="info-measure-card__icon">〰️</div>
+          <h4>Waist</h4>
+          <p>{{ content.sizingHowToWaist || 'Measure around your natural waistline — the narrowest part of your torso.' }}</p>
+        </div>
+        <div class="info-measure-card">
+          <div class="info-measure-card__icon">📐</div>
+          <h4>Hips</h4>
+          <p>{{ content.sizingHowToHips || 'Measure around the fullest part of your hips and seat, about 20cm below your waist.' }}</p>
+        </div>
+      </div>
+      <p style="margin-top:12px">{{ content.sizingNote || 'Use a soft measuring tape and take measurements over light clothing or underwear for the most accurate result.' }}</p>
+    </div>
+
+    <!-- Women's Clothing -->
+    <div class="info-section">
+      <h2>Women's Clothing</h2>
+      <div style="overflow-x:auto">
+        <table class="info-size-table">
+          <thead>
+            <tr>
+              <th>Size</th>
+              <th>SA Size</th>
+              <th>Bust (cm)</th>
+              <th>Waist (cm)</th>
+              <th>Hips (cm)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>XS</td><td>32–34</td><td>80–84</td><td>62–66</td><td>88–92</td></tr>
+            <tr><td>S</td><td>34–36</td><td>84–88</td><td>66–70</td><td>92–96</td></tr>
+            <tr><td>M</td><td>36–38</td><td>88–94</td><td>70–76</td><td>96–102</td></tr>
+            <tr><td>L</td><td>38–40</td><td>94–100</td><td>76–82</td><td>102–108</td></tr>
+            <tr><td>XL</td><td>40–42</td><td>100–108</td><td>82–90</td><td>108–116</td></tr>
+            <tr><td>XXL</td><td>42–44</td><td>108–116</td><td>90–98</td><td>116–124</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Dresses & Jumpsuits -->
+    <div class="info-section">
+      <h2>Dresses &amp; Jumpsuits</h2>
+      <div style="overflow-x:auto">
+        <table class="info-size-table">
+          <thead>
+            <tr>
+              <th>Size</th>
+              <th>Bust (cm)</th>
+              <th>Waist (cm)</th>
+              <th>Hips (cm)</th>
+              <th>Length (cm)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>XS</td><td>80–84</td><td>62–66</td><td>88–92</td><td>94–96</td></tr>
+            <tr><td>S</td><td>84–88</td><td>66–70</td><td>92–96</td><td>96–98</td></tr>
+            <tr><td>M</td><td>88–94</td><td>70–76</td><td>96–102</td><td>98–100</td></tr>
+            <tr><td>L</td><td>94–100</td><td>76–82</td><td>102–108</td><td>100–102</td></tr>
+            <tr><td>XL</td><td>100–108</td><td>82–90</td><td>108–116</td><td>102–104</td></tr>
+            <tr><td>XXL</td><td>108–116</td><td>90–98</td><td>116–124</td><td>104–106</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Bottoms -->
+    <div class="info-section">
+      <h2>Bottoms — Pants, Skirts &amp; Shorts</h2>
+      <div style="overflow-x:auto">
+        <table class="info-size-table">
+          <thead>
+            <tr>
+              <th>Size</th>
+              <th>Waist (cm)</th>
+              <th>Hips (cm)</th>
+              <th>Inseam (cm)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>XS</td><td>62–66</td><td>88–92</td><td>76</td></tr>
+            <tr><td>S</td><td>66–70</td><td>92–96</td><td>77</td></tr>
+            <tr><td>M</td><td>70–76</td><td>96–102</td><td>78</td></tr>
+            <tr><td>L</td><td>76–82</td><td>102–108</td><td>79</td></tr>
+            <tr><td>XL</td><td>82–90</td><td>108–116</td><td>80</td></tr>
+            <tr><td>XXL</td><td>90–98</td><td>116–124</td><td>80</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Still not sure -->
+    <div class="info-section">
+      <h2>Still Not Sure?</h2>
+      <p>{{ content.sizingStillNotSure || 'Our team is happy to help you find your perfect size.' }} <a routerLink="/contact">Contact us</a> and we\'ll guide you based on the specific item you\'re interested in.</p>
+      <p>Each product page also lists any specific sizing notes — look out for "Fits true to size", "Runs small" or "Relaxed fit" notes on individual items.</p>
+    </div>
+
+    <div class="info-back">
+      <a routerLink="/products">← Back to Shop</a>
+      <a routerLink="/shipping">Shipping &amp; Returns</a>
+      <a routerLink="/faqs">FAQs</a>
+    </div>
+
+  </div>
+</div>

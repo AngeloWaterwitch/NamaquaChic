@@ -1,0 +1,115 @@
+<!-- HERO -->
+<section class="nc-hero" [style.background-image]="images.heroBgImage ? 'url(' + images.heroBgImage + ')' : null">
+  <div class="nc-hero__overlay"></div>
+  <div class="nc-hero__content">
+    <p class="nc-hero__eyebrow">{{ home.heroEyebrow || '✦ New Season · 2025 Collection' }}</p>
+    <h1 class="nc-hero__title">{{ home.heroTitle || 'Wear the Desert in Bloom' }}</h1>
+    <p class="nc-hero__sub">{{ home.heroSubtitle || 'Timeless pieces inspired by the Namakwa landscape.' }}</p>
+    <a routerLink="/products" class="nc-hero__btn">{{ home.heroButtonText || 'Shop Now' }}</a>
+  </div>
+</section>
+
+<!-- FEATURED CAROUSEL -->
+<section class="nc-featured" *ngIf="featuredProducts?.length > 0">
+  <div class="nc-featured__head">
+    <p class="nc-featured__eyebrow">{{ home.featuredSectionEyebrow || '✦ Featured' }}</p>
+    <h2 class="nc-featured__title">{{ home.featuredSectionTitle || 'The Edit' }}</h2>
+    <span class="nc-featured__season">{{ home.currentSeason || 'Spring/Summer 2025' }}</span>
+  </div>
+  <div class="nc-carousel">
+    <button class="nc-carousel__arrow nc-carousel__arrow--prev" (click)="prev()" *ngIf="featuredProducts?.length > 1">‹</button>
+    <div class="nc-carousel__track">
+      <div class="nc-carousel__slide" *ngFor="let p of featuredProducts; let i = index" [class.active]="i === carouselIndex">
+        <div class="nc-carousel__img-wrap">
+          <img [src]="p.image" [alt]="p.name" onerror="this.src='assets/ProductPic/pic5.jpeg'"/>
+          <span class="nc-carousel__badge" *ngIf="p.badge">{{ p.badge }}</span>
+        </div>
+        <div class="nc-carousel__info">
+          <p class="nc-carousel__cat">{{ p.category }}</p>
+          <h3 class="nc-carousel__name">{{ p.name }}</h3>
+          <p class="nc-carousel__desc">{{ p.description }}</p>
+          <div class="nc-carousel__price">
+            <span class="nc-carousel__price--orig" *ngIf="p.originalPrice">R{{ p.originalPrice }}</span>
+            <span>R{{ p.price }}</span>
+          </div>
+          <a routerLink="/products" class="nc-carousel__btn">View Details</a>
+        </div>
+      </div>
+    </div>
+    <button class="nc-carousel__arrow nc-carousel__arrow--next" (click)="next()" *ngIf="featuredProducts?.length > 1">›</button>
+  </div>
+  <div class="nc-carousel__dots" *ngIf="featuredProducts?.length > 1">
+    <button *ngFor="let p of featuredProducts; let i = index"
+      class="nc-carousel__dot" [class.active]="i === carouselIndex" (click)="goTo(i)"></button>
+  </div>
+</section>
+
+<!-- UPCOMING DROPS -->
+<section class="nc-drops" *ngIf="upcomingDrops?.length > 0">
+  <div class="nc-drops__head">
+    <p class="nc-drops__eyebrow">✦ Upcoming</p>
+    <h2 class="nc-drops__title">Coming Soon</h2>
+  </div>
+  <div class="nc-drops__grid">
+    <div class="nc-drop-card" *ngFor="let p of upcomingDrops">
+      <div class="nc-drop-card__img">
+        <img [src]="p.image" [alt]="p.name" onerror="this.src='assets/ProductPic/pic5.jpeg'"/>
+        <div class="nc-drop-card__overlay">
+          <p class="nc-drop-card__date" *ngIf="p.launchDate">Drops {{ p.launchDate }}</p>
+        </div>
+      </div>
+      <div class="nc-drop-card__info">
+        <h3>{{ p.name }}</h3>
+        <p>{{ p.launchDescription || p.description }}</p>
+        <div class="nc-drop-card__notify">
+          <input type="email" [(ngModel)]="notifyEmail" placeholder="your@email.com" class="nc-input"/>
+          <button class="nc-btn--sm" (click)="notifyMe(p.name)">Notify Me</button>
+        </div>
+        <p class="nc-success-msg" *ngIf="notifyMsg">{{ notifyMsg }}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VIDEO / LIVESTREAM -->
+<section class="nc-video-section" *ngIf="media?.videoEnabled && media?.videoUrl">
+  <div class="nc-video-section__head">
+    <span class="nc-live-badge" *ngIf="media?.videoIsLive">🔴 LIVE</span>
+    <p class="nc-video-section__eyebrow">✦ Watch</p>
+    <h2 class="nc-video-section__title">{{ media?.videoTitle || 'Watch the Drop Live' }}</h2>
+    <p class="nc-video-section__desc" *ngIf="media?.videoDescription">{{ media?.videoDescription }}</p>
+    <p class="nc-video-section__sched" *ngIf="media?.videoScheduled && !media?.videoIsLive">
+      Scheduled: {{ media?.videoScheduled | date:'EEE d MMM, h:mm a' }}
+    </p>
+  </div>
+  <div class="nc-video-wrap">
+    <iframe *ngIf="media?.videoType === 'youtube' || media?.videoType === 'vimeo' || media?.videoType === 'livestream'"
+      [src]="getVideoEmbed() | safe"
+      frameborder="0" allowfullscreen
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture">
+    </iframe>
+    <video *ngIf="media?.videoType === 'direct'" controls [poster]="media?.videoThumbnail">
+      <source [src]="media?.videoUrl"/>
+    </video>
+  </div>
+</section>
+
+<!-- NEWSLETTER -->
+<section class="nc-newsletter">
+  <div class="nc-newsletter__inner">
+    <p class="nc-newsletter__eyebrow">✦ Stay in the Loop</p>
+    <h2 class="nc-newsletter__title">Join the NamakwaChic Circle</h2>
+    <p class="nc-newsletter__sub">Be first to know about new drops, exclusive offers and behind-the-scenes looks.</p>
+    <div class="nc-newsletter__form">
+      <input type="email" [(ngModel)]="newsletterEmail" placeholder="Enter your email address" class="nc-newsletter__input"/>
+      <button class="nc-newsletter__btn" (click)="subscribeNewsletter()">Subscribe</button>
+    </div>
+    <p class="nc-success-msg" *ngIf="newsletterMsg">{{ newsletterMsg }}</p>
+    <div class="nc-newsletter__socials">
+      <a *ngIf="home.socialInstagram" [href]="home.socialInstagram" target="_blank">Instagram</a>
+      <a *ngIf="home.socialFacebook"  [href]="home.socialFacebook"  target="_blank">Facebook</a>
+      <a *ngIf="home.socialTwitter"   [href]="home.socialTwitter"   target="_blank">Twitter</a>
+      <a *ngIf="home.socialTiktok"    [href]="home.socialTiktok"    target="_blank">TikTok</a>
+    </div>
+  </div>
+</section>

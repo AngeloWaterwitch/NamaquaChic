@@ -1,0 +1,250 @@
+/* ════════════════════════════════════════════════════════════
+   NamakwaChic — Global Stylesheet
+   Namaqualand earth tones. Clean editorial. Superbalist-grade.
+════════════════════════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@300;400;500;600&family=Playfair+Display:wght@400;500&family=Lora:wght@400;500&family=Inter:wght@300;400;500&family=Poppins:wght@300;400;500;600&family=Raleway:wght@300;400;500&display=swap');
+
+/* ── CSS Variables ─────────────────────────────────────── */
+:root {
+  --mahogany:     #584739;
+  --tobacco:      #B59E7D;
+  --tobacco-lt:   #D4C4A8;
+  --sand:         #CEC1A8;
+  --mountain:     #AAA396;
+  --vanilla:      #F1EADA;
+  --vanilla-dk:   #E8DEC8;
+  --font-heading: 'Cormorant Garamond', Georgia, serif;
+  --font-body:    'Jost', 'Helvetica Neue', sans-serif;
+  --nav-h:        68px;
+  --ease:         cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ── Hard Bootstrap Reset ──────────────────────────────── */
+/* Bootstrap sets a{color:#0d6efd}, body{background:#fff}, etc.
+   We override everything here with !important so it cannot win. */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box !important;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+}
+
+body {
+  font-family: var(--font-body) !important;
+  background-color: var(--vanilla) !important;
+  color: var(--mahogany) !important;
+  -webkit-font-smoothing: antialiased !important;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  line-height: 1.6;
+}
+
+/* Kill Bootstrap's blue link colour globally */
+a,
+a:link,
+a:visited,
+a:hover,
+a:active,
+a:focus {
+  color: inherit !important;
+  text-decoration: none !important;
+}
+
+button {
+  font-family: var(--font-body) !important;
+  cursor: pointer;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  font-weight: 300;
+  color: var(--mahogany);
+  line-height: 1.1;
+}
+
+/* ── Navbar — force dark background always ─────────────── */
+.nc-nav {
+  background: var(--mahogany) !important;
+  background-color: var(--mahogany) !important;
+}
+
+.nc-nav__brand,
+.nc-nav__brand:link,
+.nc-nav__brand:visited,
+.nc-nav__brand:hover {
+  color: var(--vanilla) !important;
+  text-decoration: none !important;
+}
+
+.nc-nav__name {
+  color: var(--vanilla) !important;
+}
+
+.nc-nav__star {
+  color: var(--tobacco) !important;
+}
+
+.nc-nav__links a,
+.nc-nav__links a:link,
+.nc-nav__links a:visited {
+  color: rgba(241, 234, 218, 0.7) !important;
+  text-decoration: none !important;
+}
+
+.nc-nav__links a:hover,
+.nc-nav__links a.active {
+  color: var(--tobacco-lt) !important;
+}
+
+.nc-nav__icon-btn,
+.nc-nav__icon-btn:link,
+.nc-nav__icon-btn:visited,
+.nc-nav__icon-btn:hover {
+  color: rgba(241, 234, 218, 0.8) !important;
+  text-decoration: none !important;
+}
+
+/* ── Hero — force white text always ────────────────────── */
+.nc-hero__title,
+.nc-hero__eyebrow {
+  color: #ffffff !important;
+}
+
+.nc-hero__sub {
+  color: rgba(255, 255, 255, 0.85) !important;
+}
+
+.nc-hero__btn,
+.nc-hero__btn:link,
+.nc-hero__btn:visited {
+  color: #ffffff !important;
+  border-color: rgba(255, 255, 255, 0.55) !important;
+  text-decoration: none !important;
+}
+
+.nc-hero__btn:hover {
+  background: rgba(255, 255, 255, 0.15) !important;
+  color: #ffffff !important;
+}
+
+/* ── Footer ─────────────────────────────────────────────── */
+.nc-footer {
+  background: var(--mahogany) !important;
+  color: var(--vanilla) !important;
+}
+
+.nc-footer a,
+.nc-footer a:link,
+.nc-footer a:visited {
+  color: rgba(241, 234, 218, 0.55) !important;
+  text-decoration: none !important;
+}
+
+.nc-footer a:hover {
+  color: var(--vanilla) !important;
+}
+
+/* ── Drawer ─────────────────────────────────────────────── */
+.nc-drawer__panel {
+  background: var(--mahogany) !important;
+}
+
+.nc-drawer__nav a,
+.nc-drawer__nav a:link,
+.nc-drawer__nav a:visited {
+  color: rgba(241, 234, 218, 0.7) !important;
+  text-decoration: none !important;
+}
+
+.nc-drawer__nav a:hover,
+.nc-drawer__nav a.active {
+  color: var(--vanilla) !important;
+}
+
+/* ── Admin nav button ───────────────────────────────────── */
+.nc-nav__admin-btn,
+.nc-nav__admin-btn:link,
+.nc-nav__admin-btn:visited {
+  color: rgba(241, 234, 218, 0.5) !important;
+  text-decoration: none !important;
+  border: 1px solid rgba(181, 158, 125, 0.25);
+  padding: 6px 14px;
+  border-radius: 2px;
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.nc-nav__admin-btn:hover {
+  color: var(--tobacco-lt) !important;
+  border-color: rgba(181, 158, 125, 0.5) !important;
+}
+
+.nc-nav__admin-btn--active {
+  color: var(--tobacco) !important;
+  border-color: rgba(181, 158, 125, 0.4) !important;
+}
+
+/* ── Bootstrap component resets ────────────────────────── */
+/* Nuke Bootstrap's navbar if it ever loads */
+.navbar { background: none !important; border: none !important; }
+.navbar-brand { color: inherit !important; }
+.nav-link { color: inherit !important; }
+
+/* Bootstrap btn resets */
+.btn-primary { background: var(--mahogany) !important; border-color: var(--mahogany) !important; }
+.btn-secondary { background: var(--tobacco) !important; border-color: var(--tobacco) !important; }
+
+/* Bootstrap form resets */
+.form-control:focus { border-color: var(--tobacco) !important; box-shadow: 0 0 0 0.2rem rgba(181,158,125,0.25) !important; }
+
+/* ── Utility classes ────────────────────────────────────── */
+.text-mahogany { color: var(--mahogany) !important; }
+.text-tobacco  { color: var(--tobacco)  !important; }
+.text-vanilla  { color: var(--vanilla)  !important; }
+.bg-mahogany   { background: var(--mahogany) !important; }
+.bg-vanilla    { background: var(--vanilla)  !important; }
+
+/* ── Global button link text fix ─────────────────────────
+   Bootstrap's a{color:blue!important} kills button text.
+   These rules restore correct colours for all NC buttons. */
+
+a.nc-cart__shop-btn,
+a.nc-cart__shop-btn:link,
+a.nc-cart__shop-btn:visited       { color: var(--vanilla) !important; text-decoration: none !important; }
+a.nc-cart__shop-btn:hover          { color: var(--mahogany) !important; }
+
+a.nc-mission__btn,
+a.nc-mission__btn:link,
+a.nc-mission__btn:visited          { color: var(--vanilla) !important; text-decoration: none !important; }
+a.nc-mission__btn:hover            { color: var(--mahogany) !important; }
+
+a.nc-carousel__btn,
+a.nc-carousel__btn:link,
+a.nc-carousel__btn:visited         { color: var(--vanilla) !important; text-decoration: none !important; }
+a.nc-carousel__btn:hover           { color: var(--mahogany) !important; }
+
+a.nc-hero__btn,
+a.nc-hero__btn:link,
+a.nc-hero__btn:visited             { color: #fff !important; text-decoration: none !important; }
+
+a[class*="__btn"],
+a[class*="-btn"],
+a[class*="__link"] {
+  text-decoration: none !important;
+}

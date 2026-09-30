@@ -1,0 +1,35 @@
+<div class="info-page">
+  <div class="info-page__inner">
+
+    <div class="info-hero">
+      <p class="info-eyebrow">✦ NamakwaChic</p>
+      <h1>Frequently Asked Questions</h1>
+      <p>{{ intro || 'Can\'t find your answer here?' }} <a routerLink="/contact">Contact us</a> and we'll get back to you quickly.</p>
+    </div>
+
+    <!-- Empty state -->
+    <div class="info-section" *ngIf="faqs.length === 0">
+      <p style="color:var(--mountain);text-align:center;padding:40px 0">No FAQs have been added yet. Check back soon!</p>
+    </div>
+
+    <!-- FAQ Accordion -->
+    <div class="info-section" *ngIf="faqs.length > 0">
+      <div class="info-faq-list">
+        <div class="info-faq" *ngFor="let faq of faqs">
+          <button class="info-faq__q" (click)="toggle(faq)">
+            {{ faq.q }}
+            <span class="info-faq__icon" [class.info-faq__icon--open]="faq.open">+</span>
+          </button>
+          <div class="info-faq__a" *ngIf="faq.open" [innerHTML]="faq.a"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-back">
+      <a routerLink="/products">← Back to Shop</a>
+      <a routerLink="/shipping">Shipping &amp; Returns</a>
+      <a routerLink="/sizing-guide">Size Guide</a>
+    </div>
+
+  </div>
+</div>

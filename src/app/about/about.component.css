@@ -1,0 +1,24 @@
+.nc-about { background: var(--vanilla); }
+.nc-eyebrow { font-size:0.72rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--tobacco); margin-bottom:10px; }
+.nc-about-hero { position:relative; min-height:60vh; background:var(--mahogany); background-size:cover; background-position:center; display:flex; align-items:center; justify-content:center; }
+.nc-about-hero__overlay { position:absolute; inset:0; background:rgba(88,71,57,0.55); }
+.nc-about-hero__content { position:relative; z-index:2; text-align:center; padding:0 32px; }
+.nc-about-hero__title { font-family:var(--font-heading); font-size:clamp(2.5rem,6vw,5rem); font-weight:300; color:var(--vanilla); margin-bottom:12px; }
+.nc-about-hero__tag { font-size:1rem; color:rgba(241,234,218,0.7); letter-spacing:0.06em; }
+.nc-story { padding:80px 48px; max-width:1200px; margin:0 auto; }
+.nc-story__inner { display:grid; grid-template-columns:1fr 1fr; gap:64px; align-items:center; }
+.nc-story__title { font-family:var(--font-heading); font-size:2.4rem; font-weight:300; color:var(--mahogany); margin-bottom:24px; }
+.nc-story__body { font-size:0.95rem; color:var(--mountain); line-height:1.85; margin-bottom:16px; }
+.nc-story__img img { width:100%; aspect-ratio:3/4; object-fit:cover; border-radius:2px; }
+.nc-values { background:var(--vanilla-dk); padding:80px 48px; }
+.nc-values__grid { display:grid; grid-template-columns:repeat(3,1fr); gap:32px; max-width:1100px; margin:0 auto; }
+.nc-value-card { background:#fff; padding:36px 32px; border-radius:4px; border-top:3px solid var(--tobacco); box-shadow:0 4px 20px rgba(88,71,57,0.06); }
+.nc-value-card h3 { font-family:var(--font-heading); font-size:1.5rem; font-weight:400; color:var(--mahogany); margin-bottom:12px; }
+.nc-value-card p { font-size:0.9rem; color:var(--mountain); line-height:1.7; }
+.nc-mission { background:var(--mahogany); padding:100px 48px; text-align:center; }
+.nc-mission__inner { max-width:640px; margin:0 auto; }
+.nc-mission h2 { font-family:var(--font-heading); font-size:2.8rem; font-weight:300; color:var(--vanilla); margin-bottom:20px; }
+.nc-mission p { font-size:1rem; color:rgba(241,234,218,0.7); line-height:1.8; margin-bottom:36px; }
+.nc-mission__btn { display:inline-block; border:1px solid var(--tobacco-lt); color:var(--vanilla) !important; font-size:0.72rem; letter-spacing:0.18em; text-transform:uppercase; padding:14px 40px; text-decoration:none !important; transition:background 0.3s,color 0.3s; }
+.nc-mission__btn:hover { background:var(--tobacco-lt); color:var(--mahogany) !important; }
+@media(max-width:900px) { .nc-story__inner,.nc-values__grid{grid-template-columns:1fr} .nc-story,.nc-values,.nc-mission{padding:56px 24px} }

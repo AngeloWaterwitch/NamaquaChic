@@ -1,0 +1,66 @@
+<div class="nc-blog" style="margin-top: var(--nav-h, 68px)">
+
+  <!-- HERO -->
+  <section class="nc-blog-hero" [style.background-image]="images.blogHeroImage ? 'url(' + images.blogHeroImage + ')' : null">
+    <div class="nc-blog-hero__overlay"></div>
+    <div class="nc-blog-hero__content">
+      <p class="nc-eyebrow">✦ Stories & Style</p>
+      <h1>The Journal</h1>
+    </div>
+  </section>
+
+  <!-- CATEGORIES -->
+  <div class="nc-blog-cats" *ngIf="categories.length">
+    <button class="nc-blog-cat" [class.active]="selectedCategory === ''" (click)="selectedCategory=''; applyFilter()">All</button>
+    <button class="nc-blog-cat" *ngFor="let c of categories" [class.active]="selectedCategory === c"
+      (click)="selectedCategory = c; applyFilter()">{{ c }}</button>
+  </div>
+
+  <!-- FEATURED POST -->
+  <section class="nc-blog-featured" *ngIf="featured">
+    <div class="nc-blog-featured__img">
+      <img [src]="featured.image" [alt]="featured.title" onerror="this.src='assets/ProductPic/pic5.jpeg'"/>
+    </div>
+    <div class="nc-blog-featured__info">
+      <p class="nc-eyebrow">✦ Featured Story</p>
+      <span class="nc-blog-cat-tag" *ngIf="featured.category">{{ featured.category }}</span>
+      <h2>{{ featured.title }}</h2>
+      <p class="nc-blog-featured__date">{{ featured.publishedAt?.toDate ? (featured.publishedAt.toDate() | date:'d MMMM yyyy') : (featured.createdAt?.toDate ? (featured.createdAt.toDate() | date:'d MMMM yyyy') : '') }}</p>
+      <p class="nc-blog-featured__excerpt">{{ featured.excerpt || (featured.content | slice:0:200) }}…</p>
+      <button class="nc-blog-read-btn" (click)="toggle(featured.id!)">
+        {{ expandedId === featured.id ? 'Close ↑' : 'Read Story →' }}
+      </button>
+      <div class="nc-blog-full-body" *ngIf="expandedId === featured.id">
+        <p>{{ featured.content }}</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- GRID OF OTHER POSTS -->
+  <section class="nc-blog-grid-section" *ngIf="rest.length > 0">
+    <div class="nc-blog-grid">
+      <article class="nc-blog-card" *ngFor="let post of rest">
+        <div class="nc-blog-card__img">
+          <img [src]="post.image" [alt]="post.title" onerror="this.src='assets/ProductPic/pic5.jpeg'"/>
+          <span class="nc-blog-cat-tag" *ngIf="post.category">{{ post.category }}</span>
+        </div>
+        <div class="nc-blog-card__info">
+          <p class="nc-blog-card__date">{{ post.publishedAt?.toDate ? (post.publishedAt.toDate() | date:'d MMM yyyy') : (post.createdAt?.toDate ? (post.createdAt.toDate() | date:'d MMM yyyy') : '') }}</p>
+          <h3>{{ post.title }}</h3>
+          <p class="nc-blog-card__excerpt">{{ post.excerpt || (post.content | slice:0:120) }}…</p>
+          <button class="nc-blog-read-btn nc-blog-read-btn--sm" (click)="toggle(post.id!)">
+            {{ expandedId === post.id ? 'Close ↑' : 'Read More →' }}
+          </button>
+          <div class="nc-blog-full-body" *ngIf="expandedId === post.id">
+            <p>{{ post.content }}</p>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- EMPTY STATE -->
+  <div class="nc-blog-empty" *ngIf="allPosts.length === 0">
+    <p>No posts yet. Check back soon.</p>
+  </div>
+</div>

@@ -1,0 +1,159 @@
+<div class="info-page">
+  <div class="info-page__inner">
+
+    <div class="info-hero">
+      <p class="info-eyebrow">✦ NamakwaChic</p>
+      <h1>Shipping &amp; Returns</h1>
+      <p>{{ content.shippingIntro || 'We want your NamakwaChic experience to be seamless from browse to doorstep — and back if needed.' }}</p>
+    </div>
+
+    <!-- Delivery at a glance -->
+    <div class="info-section">
+      <h2>Delivery at a Glance</h2>
+      <div class="info-cards">
+        <div class="info-card">
+          <div class="info-card__icon">🚚</div>
+          <h4>Free Delivery</h4>
+          <p>On all orders over R{{ content.shippingFreeThreshold || 800 }} within South Africa.</p>
+        </div>
+        <div class="info-card">
+          <div class="info-card__icon">📦</div>
+          <h4>Flat Rate</h4>
+          <p>R{{ content.shippingFlatFee || 99 }} delivery fee on orders under R{{ content.shippingFreeThreshold || 800 }}.</p>
+        </div>
+        <div class="info-card">
+          <div class="info-card__icon">⏱</div>
+          <h4>{{ content.shippingDays || '3–5 Business Days' }}</h4>
+          <p>Estimated delivery after order confirmation.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- How it works -->
+    <div class="info-section">
+      <h2>How Delivery Works</h2>
+      <div class="info-timeline">
+        <div class="info-timeline__item">
+          <div class="info-timeline__dot">1</div>
+          <div class="info-timeline__content">
+            <h4>Order Placed</h4>
+            <p>You'll receive an email confirmation immediately after placing your order.</p>
+          </div>
+        </div>
+        <div class="info-timeline__item">
+          <div class="info-timeline__dot">2</div>
+          <div class="info-timeline__content">
+            <h4>Processing (1 business day)</h4>
+            <p>We pick, pack, and quality check your order before handing it to our courier.</p>
+          </div>
+        </div>
+        <div class="info-timeline__item">
+          <div class="info-timeline__dot">3</div>
+          <div class="info-timeline__content">
+            <h4>Shipped — Tracking Sent</h4>
+            <p>You'll receive a tracking number via email so you can follow your parcel in real time.</p>
+          </div>
+        </div>
+        <div class="info-timeline__item">
+          <div class="info-timeline__dot">4</div>
+          <div class="info-timeline__content">
+            <h4>Delivered (2–4 business days)</h4>
+            <p>Your order arrives at your door. Major metro areas are typically faster.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Delivery areas -->
+    <div class="info-section">
+      <h2>Delivery Areas</h2>
+      <p>{{ content.shippingAreas || 'We currently deliver to all areas within South Africa. We do not yet ship internationally, but watch this space.' }}</p>
+    </div>
+
+    <!-- Returns policy -->
+    <div class="info-section">
+      <h2>Returns Policy</h2>
+      <div class="info-cards">
+        <div class="info-card">
+          <div class="info-card__icon">📅</div>
+          <h4>{{ content.returnsWindow || '30 Days' }}</h4>
+          <p>Return unworn items within {{ content.returnsWindow || '30 days' }} of delivery.</p>
+        </div>
+        <div class="info-card">
+          <div class="info-card__icon">✅</div>
+          <h4>Original Condition</h4>
+          <p>{{ content.returnsCondition || 'Items must be unworn, unwashed, with original tags attached.' }}</p>
+        </div>
+        <div class="info-card">
+          <div class="info-card__icon">💳</div>
+          <h4>7–10 Days Refund</h4>
+          <p>Refunds processed within 7–10 business days of receipt.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- How to return -->
+    <div class="info-section">
+      <h2>How to Return an Item</h2>
+      <div class="info-timeline">
+        <div class="info-timeline__item">
+          <div class="info-timeline__dot">1</div>
+          <div class="info-timeline__content">
+            <h4>Contact Us</h4>
+            <p>Email <a routerLink="/contact">our team</a> with your order number and the item(s) you'd like to return.</p>
+          </div>
+        </div>
+        <div class="info-timeline__item">
+          <div class="info-timeline__dot">2</div>
+          <div class="info-timeline__content">
+            <h4>Pack &amp; Send</h4>
+            <p>Securely pack the item(s) with original tags attached. Return shipping costs are at your expense unless the item is faulty.</p>
+          </div>
+        </div>
+        <div class="info-timeline__item">
+          <div class="info-timeline__dot">3</div>
+          <div class="info-timeline__content">
+            <h4>Inspection</h4>
+            <p>Once we receive your return, we inspect the item and notify you within 2 business days.</p>
+          </div>
+        </div>
+        <div class="info-timeline__item">
+          <div class="info-timeline__dot">4</div>
+          <div class="info-timeline__content">
+            <h4>Refund Issued</h4>
+            <p>Approved refunds are processed within 7–10 business days back to your original payment method.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Non-returnable items -->
+    <div class="info-section">
+      <h2>Non-Returnable Items</h2>
+      <p>The following items cannot be returned unless faulty:</p>
+      <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:8px;margin-top:10px">
+        <li *ngFor="let item of nonReturnableItems"
+          style="font-size:0.88rem;color:var(--mountain);padding-left:20px;position:relative">
+          <span style="position:absolute;left:0;color:var(--tobacco);font-size:0.55rem;top:6px">✦</span>
+          {{ item }}
+        </li>
+      </ul>
+    </div>
+
+    <!-- Faulty items -->
+    <div class="info-section">
+      <h2>Faulty or Incorrect Items</h2>
+      <p>{{ content.returnsFaultyPolicy || 'If you receive a faulty or incorrect item, please contact us within 7 days of delivery with your order number and clear photos.' }}
+        <a routerLink="/contact">Contact us here.</a>
+      </p>
+    </div>
+
+    <div class="info-back">
+      <a routerLink="/products">← Back to Shop</a>
+      <a routerLink="/sizing-guide">Size Guide</a>
+      <a routerLink="/faqs">FAQs</a>
+      <a routerLink="/terms">Terms &amp; Conditions</a>
+    </div>
+
+  </div>
+</div>

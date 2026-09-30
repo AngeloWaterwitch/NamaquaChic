@@ -1,0 +1,65 @@
+<div style="margin-top: var(--nav-h, 68px)">
+  <section class="nc-contact-hero" [style.background-image]="images.contactHeroImage ? 'url(' + images.contactHeroImage + ')' : null">
+    <div class="nc-contact-hero__overlay"></div>
+    <div class="nc-contact-hero__content">
+      <p class="nc-eyebrow">✦ Get in Touch</p>
+      <h1>Contact Us</h1>
+    </div>
+  </section>
+
+  <section class="nc-contact-body">
+    <div class="nc-contact-form-wrap">
+      <div class="nc-contact-success" *ngIf="formSubmitted">
+        <span>✓</span>
+        <h3>Message Received</h3>
+        <p>Thank you for reaching out. We'll be in touch soon.</p>
+      </div>
+      <div *ngIf="!formSubmitted">
+        <p class="nc-eyebrow">✦ Send a Message</p>
+        <h2 class="nc-contact-form__title">We'd Love to Hear from You</h2>
+        <div class="nc-contact-form">
+          <div class="nc-field"><label>Name</label><input type="text" [(ngModel)]="name" placeholder="Your name"/></div>
+          <div class="nc-field"><label>Email</label><input type="email" [(ngModel)]="email" placeholder="your@email.com"/></div>
+          <div class="nc-field nc-field--full"><label>Subject</label><input type="text" [(ngModel)]="subject" placeholder="What's this about?"/></div>
+          <div class="nc-field nc-field--full"><label>Message</label><textarea [(ngModel)]="message" rows="5" placeholder="Tell us more…"></textarea></div>
+        </div>
+        <p class="nc-contact-error" *ngIf="formError" style="color:#C0392B;font-size:0.82rem;margin-bottom:12px">{{ formError }}</p>
+        <button class="nc-contact-submit" (click)="submitContactForm()" [disabled]="formSubmitting">
+          {{ formSubmitting ? 'Sending…' : 'Send Message' }}
+        </button>
+      </div>
+    </div>
+
+    <div class="nc-contact-info">
+      <p class="nc-eyebrow">✦ Find Us</p>
+      <h2>Business Info</h2>
+      <div class="nc-info-item" *ngIf="contact.contactAddress">
+        <span class="nc-info-icon">📍</span>
+        <div><h4>Address</h4><p>{{ contact.contactAddress }}</p></div>
+      </div>
+      <div class="nc-info-item" *ngIf="contact.contactEmail">
+        <span class="nc-info-icon">✉️</span>
+        <div><h4>Email</h4><p>{{ contact.contactEmail }}</p></div>
+      </div>
+      <div class="nc-info-item" *ngIf="contact.contactPhone">
+        <span class="nc-info-icon">📞</span>
+        <div><h4>Phone</h4><p>{{ contact.contactPhone }}</p></div>
+      </div>
+      <div class="nc-info-item" *ngIf="contact.contactHoursWeekday">
+        <span class="nc-info-icon">🕐</span>
+        <div>
+          <h4>Hours</h4>
+          <p>Mon–Fri: {{ contact.contactHoursWeekday }}</p>
+          <p *ngIf="contact.contactHoursSaturday">Sat: {{ contact.contactHoursSaturday }}</p>
+        </div>
+      </div>
+      <div class="nc-contact-socials" *ngIf="home.socialInstagram || home.socialFacebook || home.socialTiktok || home.socialTwitter || home.socialLinkedin">
+        <a *ngIf="home.socialInstagram" [href]="home.socialInstagram" target="_blank">Instagram</a>
+        <a *ngIf="home.socialFacebook"  [href]="home.socialFacebook"  target="_blank">Facebook</a>
+        <a *ngIf="home.socialTiktok"    [href]="home.socialTiktok"    target="_blank">TikTok</a>
+        <a *ngIf="home.socialTwitter"   [href]="home.socialTwitter"   target="_blank">Twitter</a>
+        <a *ngIf="home.socialLinkedin"  [href]="home.socialLinkedin"  target="_blank">LinkedIn</a>
+      </div>
+    </div>
+  </section>
+</div>

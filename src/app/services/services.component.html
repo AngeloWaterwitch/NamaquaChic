@@ -1,0 +1,46 @@
+<div style="margin-top: var(--nav-h, 68px)">
+  <section class="nc-svc-hero" [style.background-image]="images.servicesHeroImage ? 'url(' + images.servicesHeroImage + ')' : null">
+    <div class="nc-svc-hero__overlay"></div>
+    <div class="nc-svc-hero__content">
+      <p class="nc-eyebrow">✦ What We Offer</p>
+      <h1>Our Services</h1>
+    </div>
+  </section>
+
+  <section class="nc-svc-cards">
+    <div class="nc-svc-card nc-svc-card--featured">
+      <div class="nc-svc-card__num">01</div>
+      <h3>{{ services.service1Title || 'Personal Styling' }}</h3>
+      <p>{{ services.service1Text || 'One-on-one styling consultations tailored to your body and lifestyle.' }}</p>
+    </div>
+    <div class="nc-svc-card">
+      <div class="nc-svc-card__num">02</div>
+      <h3>{{ services.service2Title || 'Bespoke Orders' }}</h3>
+      <p>{{ services.service2Text || 'Custom sizing and colour options for selected pieces.' }}</p>
+    </div>
+    <div class="nc-svc-card">
+      <div class="nc-svc-card__num">03</div>
+      <h3>{{ services.service3Title || 'Gift Wrapping' }}</h3>
+      <p>{{ services.service3Text || 'Luxury packaging available for all orders on request.' }}</p>
+    </div>
+  </section>
+
+  <section class="nc-delivery">
+    <div class="nc-delivery__inner">
+      <p class="nc-eyebrow">✦ Delivery & Returns</p>
+      <h2>We Bring NamakwaChic to You</h2>
+      <div class="nc-delivery__grid">
+        <div class="nc-delivery__item"><span class="nc-delivery__icon">🚚</span><h4>Standard Delivery</h4><p>3–5 business days nationwide</p></div>
+        <div class="nc-delivery__item"><span class="nc-delivery__icon">⚡</span><h4>Express Delivery</h4><p>Next day delivery available</p></div>
+        <div class="nc-delivery__item"><span class="nc-delivery__icon">🎁</span><h4>Free Shipping</h4><p>On all orders over R800</p></div>
+        <div class="nc-delivery__item"><span class="nc-delivery__icon">📦</span><h4>Easy Returns</h4><p>30-day hassle-free returns</p></div>
+      </div>
+      <button class="nc-delivery__toggle" (click)="showDelivery = !showDelivery">
+        {{ showDelivery ? 'Hide Details ↑' : 'Learn More ↓' }}
+      </button>
+      <div class="nc-delivery__more" *ngIf="showDelivery && services.deliveryLearnMore">
+        <p>{{ services.deliveryLearnMore }}</p>
+      </div>
+    </div>
+  </section>
+</div>

@@ -1,0 +1,56 @@
+<<div class="nc-about" style="margin-top: var(--nav-h, 68px)">
+  <!-- HERO -->
+  <section class="nc-about-hero" [style.background-image]="images.aboutHeroImage ? 'url(' + images.aboutHeroImage + ')' : null">
+    <div class="nc-about-hero__overlay"></div>
+    <div class="nc-about-hero__content">
+      <p class="nc-eyebrow">✦ Our Story</p>
+      <h1 class="nc-about-hero__title">{{ about.aboutTitle || 'About NamakwaChic' }}</h1>
+      <p class="nc-about-hero__tag">{{ about.aboutTagline || 'Where the desert meets fashion' }}</p>
+    </div>
+  </section>
+
+  <!-- STORY -->
+  <section class="nc-story">
+    <div class="nc-story__inner">
+      <div class="nc-story__text">
+        <p class="nc-eyebrow">✦ The Story</p>
+        <h2 class="nc-story__title">{{ about.aboutStoryTitle || 'Born from the Karoo' }}</h2>
+        <p class="nc-story__body">{{ about.aboutBody1 || 'NamakwaChic was born from a deep love for the Namakwa landscape.' }}</p>
+        <p class="nc-story__body" *ngIf="about.aboutBody2">{{ about.aboutBody2 }}</p>
+      </div>
+      <div class="nc-story__img" *ngIf="about.aboutImage">
+        <img [src]="about.aboutImage" alt="Our Story" onerror="this.style.display='none'"/>
+      </div>
+    </div>
+  </section>
+
+  <!-- VALUES -->
+  <section class="nc-values">
+    <p class="nc-eyebrow" style="text-align:center;margin-bottom:12px">✦ What We Stand For</p>
+    <div class="nc-values__grid">
+      <div class="nc-value-card">
+        <h3>{{ about.aboutValue1Title || 'Craftsmanship' }}</h3>
+        <p>{{ about.aboutValue1Text || 'Every piece is crafted with intention and care.' }}</p>
+      </div>
+      <div class="nc-value-card">
+        <h3>{{ about.aboutValue2Title || 'Sustainability' }}</h3>
+        <p>{{ about.aboutValue2Text || 'We design for longevity, not for seasons.' }}</p>
+      </div>
+      <div class="nc-value-card">
+        <h3>{{ about.aboutValue3Title || 'Identity' }}</h3>
+        <p>{{ about.aboutValue3Text || 'Wear what speaks to who you are.' }}</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- MISSION -->
+  <section class="nc-mission">
+    <div class="nc-mission__inner">
+      <p class="nc-eyebrow" style="color:var(--tobacco-lt)">✦ Our Mission</p>
+      <h2>{{ about.aboutMissionTitle || 'Fashion That Honours the Land' }}</h2>
+      <p>{{ about.aboutMissionText || 'To create timeless fashion rooted in the soul of the Namakwa landscape.' }}</p>
+      <a routerLink="/products" class="nc-mission__btn">Shop the Collection</a>
+    </div>
+  </section>
+</div>
+

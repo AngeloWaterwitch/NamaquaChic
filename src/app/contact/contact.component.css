@@ -1,0 +1,32 @@
+.nc-eyebrow { font-size:0.72rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--tobacco); margin-bottom:10px; }
+.nc-contact-hero { position:relative; min-height:50vh; background:var(--mahogany); background-size:cover; background-position:center; display:flex; align-items:center; justify-content:center; }
+.nc-contact-hero__overlay { position:absolute; inset:0; background:rgba(88,71,57,0.55); }
+.nc-contact-hero__content { position:relative; z-index:2; text-align:center; }
+.nc-contact-hero__content h1 { font-family:var(--font-heading); font-size:clamp(2.5rem,6vw,5rem); font-weight:300; color:var(--vanilla); }
+.nc-contact-body { display:grid; grid-template-columns:1fr 400px; gap:0; max-width:1200px; margin:60px auto; padding:0 48px; align-items:start; }
+.nc-contact-form-wrap { padding-right:64px; border-right:1px solid rgba(88,71,57,0.1); }
+.nc-contact-form__title { font-family:var(--font-heading); font-size:2rem; font-weight:300; color:var(--mahogany); margin-bottom:28px; }
+.nc-contact-form { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:20px; }
+.nc-field { display:flex; flex-direction:column; gap:5px; }
+.nc-field--full { grid-column:1/-1; }
+.nc-field label { font-size:0.68rem; font-weight:500; letter-spacing:0.12em; text-transform:uppercase; color:var(--mountain); }
+.nc-field input, .nc-field textarea { font-family:var(--font-body); font-size:0.88rem; color:var(--mahogany); background:var(--vanilla); border:1px solid rgba(88,71,57,0.15); border-radius:2px; padding:11px 14px; outline:none; transition:border-color 0.25s; resize:vertical; }
+.nc-field input:focus, .nc-field textarea:focus { border-color:var(--tobacco); background:#fff; }
+.nc-contact-submit { background:var(--mahogany); color:var(--vanilla); border:none; padding:14px 36px; font-family:var(--font-body); font-size:0.72rem; letter-spacing:0.16em; text-transform:uppercase; cursor:pointer; border-radius:2px; transition:background 0.25s; }
+.nc-contact-submit:hover { background:var(--tobacco); color:var(--mahogany); }
+.nc-contact-success { text-align:center; padding:60px 0; }
+.nc-contact-success span { font-size:3rem; display:block; margin-bottom:16px; color:#27ae60; }
+.nc-contact-success h3 { font-family:var(--font-heading); font-size:1.8rem; color:var(--mahogany); margin-bottom:8px; }
+.nc-contact-success p { color:var(--mountain); }
+.nc-contact-info { padding-left:48px; }
+.nc-contact-info h2 { font-family:var(--font-heading); font-size:1.8rem; font-weight:300; color:var(--mahogany); margin-bottom:28px; }
+.nc-info-item { display:flex; gap:16px; align-items:flex-start; margin-bottom:24px; padding-bottom:24px; border-bottom:1px solid rgba(88,71,57,0.08); }
+.nc-info-icon { font-size:1.2rem; flex-shrink:0; margin-top:2px; }
+.nc-info-item h4 { font-size:0.72rem; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; color:var(--tobacco); margin-bottom:4px; }
+.nc-info-item p { font-size:0.88rem; color:var(--mountain); line-height:1.6; }
+.nc-contact-socials { display:flex; gap:16px; flex-wrap:wrap; margin-top:8px; }
+.nc-contact-socials a { font-size:0.72rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--mahogany); text-decoration:none; border-bottom:1px solid var(--tobacco); padding-bottom:2px; transition:color 0.2s; }
+.nc-contact-socials a:hover { color:var(--tobacco); }
+@media(max-width:900px) { .nc-contact-body{grid-template-columns:1fr;padding:0 24px} .nc-contact-form-wrap{padding-right:0;border-right:none;margin-bottom:48px} .nc-contact-info{padding-left:0} }
+@media(max-width:480px) { .nc-contact-form{grid-template-columns:1fr} }
+

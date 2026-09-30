@@ -1,0 +1,34 @@
+.nc-eyebrow { font-size:.72rem; letter-spacing:.2em; text-transform:uppercase; color:var(--tobacco); margin-bottom:10px; }
+.nc-blog-hero { position:relative; min-height:45vh; background:var(--mahogany); background-size:cover; background-position:center; display:flex; align-items:center; justify-content:center; }
+.nc-blog-hero__overlay { position:absolute; inset:0; background:rgba(88,71,57,0.5); }
+.nc-blog-hero__content { position:relative; z-index:2; text-align:center; }
+.nc-blog-hero__content h1 { font-family:var(--font-heading); font-size:clamp(2.5rem,6vw,5rem); font-weight:300; color:var(--vanilla); }
+.nc-blog-cats { display:flex; gap:10px; flex-wrap:wrap; padding:24px 48px; background:#fff; border-bottom:1px solid rgba(88,71,57,0.08); }
+.nc-blog-cat { background:none; border:1px solid rgba(88,71,57,0.18); color:var(--mahogany); font-family:var(--font-body); font-size:.75rem; letter-spacing:.1em; text-transform:uppercase; padding:7px 18px; border-radius:2px; cursor:pointer; transition:all .2s; }
+.nc-blog-cat:hover,.nc-blog-cat.active { background:var(--mahogany); color:var(--vanilla); border-color:var(--mahogany); }
+.nc-blog-cat-tag { display:inline-block; background:var(--tobacco); color:var(--mahogany); font-size:.62rem; letter-spacing:.12em; text-transform:uppercase; padding:3px 10px; border-radius:2px; margin-bottom:12px; }
+.nc-blog-featured { display:grid; grid-template-columns:1fr 1fr; gap:0; max-width:1200px; margin:56px auto; padding:0 48px; align-items:center; gap:56px; }
+.nc-blog-featured__img { aspect-ratio:4/3; overflow:hidden; border-radius:2px; }
+.nc-blog-featured__img img { width:100%; height:100%; object-fit:cover; transition:transform .5s; }
+.nc-blog-featured__img:hover img { transform:scale(1.03); }
+.nc-blog-featured__info h2 { font-family:var(--font-heading); font-size:2.2rem; font-weight:300; color:var(--mahogany); margin-bottom:12px; line-height:1.15; }
+.nc-blog-featured__date { font-size:.75rem; color:var(--mountain); letter-spacing:.08em; margin-bottom:16px; }
+.nc-blog-featured__excerpt { font-size:.92rem; color:var(--mountain); line-height:1.8; margin-bottom:24px; }
+.nc-blog-read-btn { background:none; border:none; color:var(--mahogany); font-family:var(--font-body); font-size:.75rem; letter-spacing:.14em; text-transform:uppercase; cursor:pointer; padding:0; border-bottom:1px solid var(--tobacco); padding-bottom:2px; transition:color .2s; }
+.nc-blog-read-btn:hover { color:var(--tobacco); }
+.nc-blog-read-btn--sm { font-size:.7rem; }
+.nc-blog-full-body { margin-top:20px; padding:20px 24px; background:var(--vanilla); border-left:3px solid var(--tobacco); border-radius:0 4px 4px 0; }
+.nc-blog-full-body p { font-size:.9rem; color:var(--mountain); line-height:1.9; white-space:pre-line; }
+.nc-blog-grid-section { background:var(--vanilla-dk); padding:56px 48px; }
+.nc-blog-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:32px; max-width:1200px; margin:0 auto; }
+.nc-blog-card { background:#fff; border-radius:4px; overflow:hidden; box-shadow:0 4px 20px rgba(88,71,57,0.07); }
+.nc-blog-card__img { position:relative; aspect-ratio:16/10; overflow:hidden; }
+.nc-blog-card__img img { width:100%; height:100%; object-fit:cover; transition:transform .5s; }
+.nc-blog-card:hover .nc-blog-card__img img { transform:scale(1.04); }
+.nc-blog-card__img .nc-blog-cat-tag { position:absolute; bottom:12px; left:12px; }
+.nc-blog-card__info { padding:24px; }
+.nc-blog-card__date { font-size:.72rem; color:var(--mountain); letter-spacing:.08em; margin-bottom:8px; }
+.nc-blog-card__info h3 { font-family:var(--font-heading); font-size:1.35rem; font-weight:400; color:var(--mahogany); margin-bottom:10px; line-height:1.2; }
+.nc-blog-card__excerpt { font-size:.86rem; color:var(--mountain); line-height:1.7; margin-bottom:16px; }
+.nc-blog-empty { text-align:center; padding:100px 24px; color:var(--mountain); font-style:italic; font-size:.95rem; }
+@media(max-width:900px) { .nc-blog-featured{grid-template-columns:1fr;padding:0 24px;margin:40px auto} .nc-blog-grid-section,.nc-blog-cats{padding:40px 24px} }

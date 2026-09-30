@@ -1,0 +1,199 @@
+<!-- Announcement Banner — above navbar, hidden on /admin or when dismissed -->
+<div class="nc-banner"
+  *ngIf="!isAdminRoute && banner.bannerEnabled && banner.bannerText && !bannerDismissed"
+  [style.background]="banner.bannerBg || '#B59E7D'">
+  <span>{{ banner.bannerText }}</span>
+  <a *ngIf="banner.bannerLink" [href]="banner.bannerLink" class="nc-banner__link">
+    {{ banner.bannerLinkText || 'Shop Now' }}
+  </a>
+  <button class="nc-banner__dismiss" (click)="dismissBanner()" aria-label="Close announcement">✕</button>
+</div>
+
+<!-- Navbar — hidden on /admin -->
+<nav class="nc-nav" *ngIf="!isAdminRoute" [class.nc-nav--pushed]="banner.bannerEnabled && banner.bannerText && !bannerDismissed">
+  <div class="nc-nav__inner">
+
+    <!-- Logo -->
+    <a class="nc-nav__brand" routerLink="/home">
+      <span class="nc-nav__star">✦</span>
+      <span class="nc-nav__name">NamakwaChic</span>
+    </a>
+
+    <!-- Desktop Links -->
+    <ul class="nc-nav__links">
+      <li><a routerLink="/home"     routerLinkActive="active">Home</a></li>
+      <li><a routerLink="/products" routerLinkActive="active">Shop</a></li>
+      <li><a routerLink="/about"    routerLinkActive="active">About</a></li>
+      <li><a routerLink="/services" routerLinkActive="active">Services</a></li>
+      <li><a routerLink="/blog"     routerLinkActive="active">Blog</a></li>
+      <li><a routerLink="/contact"  routerLinkActive="active">Contact</a></li>
+    </ul>
+
+    <!-- Actions (search + cart + burger) -->
+    <div class="nc-nav__actions">
+
+      <!-- Search -->
+      <div class="nc-search" [class.open]="searchOpen">
+        <input *ngIf="searchOpen" class="nc-search__input" type="text"
+               [(ngModel)]="searchQuery" placeholder="Search products…"
+               (keyup.enter)="doSearch()" (keyup.escape)="toggleSearch()" autofocus/>
+        <button class="nc-nav__icon-btn" (click)="toggleSearch()" aria-label="Search">
+          <svg *ngIf="!searchOpen" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <svg *ngIf="searchOpen"  width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+
+      <!-- Cart -->
+      <a routerLink="/cart" class="nc-nav__icon-btn nc-cart" aria-label="Cart">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        <span class="nc-cart__badge" *ngIf="(cartCount$ | async)! > 0">{{ cartCount$ | async }}</span>
+      </a>
+
+      <!-- Burger (mobile only) -->
+      <button class="nc-burger" (click)="toggleMenu()" [class.open]="menuOpen" aria-label="Menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+    </div>
+  </div>
+
+  <!-- Mobile drawer backdrop + panel -->
+  <div class="nc-drawer" [class.open]="menuOpen" (click)="closeMenu()">
+    <div class="nc-drawer__panel" (click)="$event.stopPropagation()">
+      <div class="nc-drawer__header">
+        <span class="nc-drawer__brand">✦ NamakwaChic</span>
+        <button class="nc-drawer__close" (click)="closeMenu()">✕</button>
+      </div>
+      <nav class="nc-drawer__nav">
+        <a routerLink="/home"     (click)="closeMenu()" routerLinkActive="active">Home</a>
+        <a routerLink="/products" (click)="closeMenu()" routerLinkActive="active">Shop</a>
+        <a routerLink="/about"    (click)="closeMenu()" routerLinkActive="active">About</a>
+        <a routerLink="/services" (click)="closeMenu()" routerLinkActive="active">Services</a>
+        <a routerLink="/blog"     (click)="closeMenu()" routerLinkActive="active">Blog</a>
+        <a routerLink="/contact"  (click)="closeMenu()" routerLinkActive="active">Contact</a>
+      </nav>
+      <div class="nc-drawer__footer">
+        <a routerLink="/cart" (click)="closeMenu()" class="nc-drawer__cart">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+          Shopping Bag
+          <span *ngIf="(cartCount$ | async)! > 0" class="nc-drawer__badge">{{ cartCount$ | async }}</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+</nav>
+
+<!-- ── MAINTENANCE SCREEN ── -->
+<div class="nc-maintenance" *ngIf="maintenanceMode && !isAdminRoute">
+  <div class="nc-maintenance__inner">
+    <div class="nc-maintenance__logo">✦ NamakwaChic</div>
+    <div class="nc-maintenance__icon">🔧</div>
+    <h1 class="nc-maintenance__title">{{ maintenanceTitle }}</h1>
+    <p class="nc-maintenance__msg">{{ maintenanceMessage }}</p>
+    <p class="nc-maintenance__eta" *ngIf="maintenanceEstimate">
+      ⏱ Expected back: <strong>{{ maintenanceEstimate }}</strong>
+    </p>
+    <div class="nc-maintenance__notify" *ngIf="maintenanceShowNotify && !notifySubmitted">
+      <p>Enter your email and we'll notify you the moment we're back.</p>
+      <div class="nc-maintenance__form">
+        <input type="email" [(ngModel)]="notifyEmail" placeholder="your@email.com"/>
+        <button (click)="submitNotify()">Notify Me</button>
+      </div>
+    </div>
+    <div class="nc-maintenance__thanks" *ngIf="notifySubmitted">
+      ✓ Got it! We'll email you when we're back online.
+    </div>
+  </div>
+</div>
+
+<!-- Normal site content -->
+<ng-container *ngIf="!maintenanceMode || isAdminRoute">
+  <router-outlet></router-outlet>
+
+  <!-- ── SITE FOOTER ── -->
+  <footer class="nc-footer" *ngIf="!isAdminRoute">
+    <div class="nc-footer__inner">
+
+      <div class="nc-footer__brand">
+        <p class="nc-footer__logo">✦ NamakwaChic</p>
+        <p class="nc-footer__tagline">Curated fashion from the Namakwa desert.</p>
+        <div class="nc-footer__socials">
+          <a [href]="homeContent.socialInstagram || 'https://instagram.com'" target="_blank" aria-label="Instagram">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+          </a>
+          <a [href]="homeContent.socialFacebook || 'https://facebook.com'" target="_blank" aria-label="Facebook">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+          </a>
+          <a [href]="homeContent.socialTiktok || 'https://tiktok.com'" target="_blank" aria-label="TikTok">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"/></svg>
+          </a>
+          <a *ngIf="homeContent.socialTwitter" [href]="homeContent.socialTwitter" target="_blank" aria-label="Twitter">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 5l14 14M19 5L5 19"/></svg>
+          </a>
+          <a *ngIf="homeContent.socialLinkedin" [href]="homeContent.socialLinkedin" target="_blank" aria-label="LinkedIn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5"/><line x1="7" y1="10" x2="7" y2="17"/><circle cx="7" cy="6.5" r="1" fill="currentColor" stroke="none"/><line x1="12" y1="10" x2="12" y2="17"/><path d="M12 13c0-2 1.5-3 3-3s2 1 2 3v4"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <div class="nc-footer__col">
+        <h4>Shop</h4>
+        <a routerLink="/products">All Products</a>
+        <a routerLink="/products" [queryParams]="{category: 'New Arrivals'}">New Arrivals</a>
+        <a routerLink="/products" [queryParams]="{category: 'Sale'}">Sale</a>
+        <a routerLink="/cart">Your Bag</a>
+      </div>
+
+      <div class="nc-footer__col">
+        <h4>Info</h4>
+        <a routerLink="/about">About Us</a>
+        <a routerLink="/services">Services</a>
+        <a routerLink="/blog">Blog</a>
+        <a routerLink="/contact">Contact</a>
+      </div>
+
+      <div class="nc-footer__col">
+        <h4>Help</h4>
+        <a routerLink="/shipping">Shipping & Returns</a>
+        <a routerLink="/sizing-guide">Size Guide</a>
+        <a routerLink="/faqs">FAQs</a>
+        <a routerLink="/privacy-policy">Privacy Policy</a>
+        <a routerLink="/terms">Terms & Conditions</a>
+      </div>
+
+    </div>
+
+    <div class="nc-footer__bottom">
+      <p>© {{ currentYear }} NamakwaChic. All rights reserved.</p>
+      <div class="nc-footer__legal">
+        <a routerLink="/privacy-policy">Privacy Policy</a>
+        <span>·</span>
+        <a routerLink="/terms">Terms & Conditions</a>
+      </div>
+    </div>
+  </footer>
+
+</ng-container>
+
+<!-- ── POPIA COOKIE CONSENT BANNER ── -->
+<div class="nc-cookie" *ngIf="!isAdminRoute && showCookieBanner" [class.nc-cookie--visible]="cookieBannerVisible">
+  <div class="nc-cookie__inner">
+    <div class="nc-cookie__text">
+      <p class="nc-cookie__title">Your Privacy Matters</p>
+      <p>
+        We use cookies to improve your shopping experience and to comply with the
+        <strong>Protection of Personal Information Act (POPIA)</strong>.
+        By continuing to use NamakwaChic, you consent to our use of cookies.
+        <a routerLink="/privacy-policy" (click)="closeCookieBanner()">Read our Privacy Policy →</a>
+      </p>
+    </div>
+    <div class="nc-cookie__actions">
+      <button class="nc-cookie__decline" (click)="declineCookies()">Decline</button>
+      <button class="nc-cookie__accept" (click)="acceptCookies()">Accept All</button>
+    </div>
+  </div>
+</div>
+ 

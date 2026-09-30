@@ -1,0 +1,35 @@
+.nc-eyebrow { font-size:0.72rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--tobacco); margin-bottom:10px; }
+.nc-svc-hero { position:relative; min-height:50vh; background:var(--mahogany); background-size:cover; background-position:center; display:flex; align-items:center; justify-content:center; }
+.nc-svc-hero__overlay { position:absolute; inset:0; background:rgba(88,71,57,0.55); }
+.nc-svc-hero__content { position:relative; z-index:2; text-align:center; }
+.nc-svc-hero__content h1 { font-family:var(--font-heading); font-size:clamp(2.5rem,6vw,5rem); font-weight:300; color:var(--vanilla); }
+.nc-svc-cards { display:grid; grid-template-columns:repeat(3,1fr); gap:0; max-width:1200px; margin:60px auto; padding:0 48px; }
+.nc-svc-card { padding:48px 36px; border:1px solid rgba(88,71,57,0.1); position:relative; transition:transform 0.25s ease, box-shadow 0.25s ease; }
+.nc-svc-card:hover { transform:translateY(-6px); box-shadow:0 16px 32px rgba(88,71,57,0.16); z-index:1; }
+.nc-svc-card--featured { background:var(--mahogany); color:var(--vanilla); }
+.nc-svc-card--featured p { color:rgba(241,234,218,0.7); }
+.nc-svc-card--featured .nc-svc-card__num { color:var(--tobacco); }
+.nc-svc-card__num { font-family:var(--font-heading); font-size:3rem; font-weight:300; color:rgba(88,71,57,0.15); margin-bottom:16px; line-height:1; }
+
+/* Title is always a solid mahogany/vanilla chip — those two are defined to contrast
+   with each other, so this stays readable on any device, any theme, hover or not. */
+.nc-svc-card h3 {
+  font-family:var(--font-heading); font-size:1.5rem; font-weight:400; margin-bottom:14px;
+  display:inline-block; background:var(--mahogany); color:var(--vanilla);
+  padding:5px 14px; border-radius:3px;
+}
+.nc-svc-card--featured h3 { background:var(--vanilla); color:var(--mahogany); }
+
+.nc-svc-card p { font-size:0.9rem; color:var(--mountain); line-height:1.75; }
+.nc-delivery { background:var(--vanilla-dk); padding:80px 48px; }
+.nc-delivery__inner { max-width:960px; margin:0 auto; text-align:center; }
+.nc-delivery h2 { font-family:var(--font-heading); font-size:2.6rem; font-weight:300; color:var(--mahogany); margin-bottom:40px; }
+.nc-delivery__grid { display:grid; grid-template-columns:repeat(4,1fr); gap:24px; margin-bottom:32px; }
+.nc-delivery__item { background:#fff; padding:28px 20px; border-radius:4px; box-shadow:0 2px 12px rgba(88,71,57,0.06); }
+.nc-delivery__icon { font-size:1.8rem; display:block; margin-bottom:12px; }
+.nc-delivery__item h4 { font-family:var(--font-heading); font-size:1.1rem; font-weight:400; color:var(--mahogany); margin-bottom:6px; }
+.nc-delivery__item p { font-size:0.82rem; color:var(--mountain); }
+.nc-delivery__toggle { background:none; border:1px solid rgba(88,71,57,0.2); color:var(--mahogany); font-family:var(--font-body); font-size:0.78rem; letter-spacing:0.12em; text-transform:uppercase; padding:11px 28px; cursor:pointer; border-radius:2px; transition:background 0.2s; margin-bottom:20px; }
+.nc-delivery__toggle:hover { background:var(--sand); }
+.nc-delivery__more { background:#fff; border-radius:4px; padding:24px; text-align:left; font-size:0.9rem; color:var(--mountain); line-height:1.8; border-left:3px solid var(--tobacco); }
+@media(max-width:900px) { .nc-svc-cards{grid-template-columns:1fr;padding:0 24px} .nc-delivery__grid{grid-template-columns:repeat(2,1fr)} .nc-delivery{padding:56px 24px} }

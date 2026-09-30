@@ -1,0 +1,109 @@
+/* ── IMAGE UPLOAD COMPONENT ── */
+.img-upload { width: 100%; }
+
+.img-upload__label {
+  font-size: 0.7rem; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--mahogany);
+  margin-bottom: 8px;
+}
+
+.img-upload__zone {
+  position: relative;
+  border: 2px dashed var(--vanilla-dk);
+  border-radius: 4px;
+  min-height: 140px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; overflow: hidden;
+  background: var(--vanilla);
+  transition: border-color 0.2s, background 0.2s;
+}
+.img-upload__zone:hover { border-color: var(--tobacco); }
+.img-upload__zone--drag {
+  border-color: var(--tobacco);
+  background: rgba(181,158,125,0.06);
+}
+.img-upload__zone--has-img { border-style: solid; min-height: 180px; }
+
+/* Preview image */
+.img-upload__preview {
+  width: 100%; height: 180px;
+  object-fit: cover; display: block;
+  border-radius: 2px;
+}
+
+/* Hover overlay */
+.img-upload__overlay {
+  position: absolute; inset: 0;
+  background: rgba(88,71,57,0.55);
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; transition: opacity 0.2s;
+  color: var(--vanilla);
+  font-size: 0.75rem; letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.img-upload__zone:hover .img-upload__overlay { opacity: 1; }
+
+/* Empty state */
+.img-upload__empty {
+  display: flex; flex-direction: column;
+  align-items: center; gap: 8px;
+  color: var(--mountain); padding: 24px;
+  text-align: center;
+}
+.img-upload__empty svg { color: var(--sand); }
+.img-upload__empty p { font-size: 0.84rem; color: var(--mountain); }
+.img-upload__empty span { font-size: 0.7rem; color: var(--sand); }
+
+/* Progress */
+.img-upload__progress {
+  display: flex; flex-direction: column;
+  align-items: center; gap: 10px; padding: 24px;
+  width: 100%;
+}
+.img-upload__spinner {
+  width: 28px; height: 28px;
+  border: 2px solid var(--vanilla-dk);
+  border-top-color: var(--tobacco);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.img-upload__progress p {
+  font-size: 0.78rem; color: var(--mountain);
+}
+.img-upload__bar {
+  width: 80%; height: 3px;
+  background: var(--vanilla-dk); border-radius: 2px;
+  overflow: hidden;
+}
+.img-upload__bar-fill {
+  height: 100%; background: var(--tobacco);
+  border-radius: 2px;
+  transition: width 0.2s ease;
+}
+
+/* Action buttons */
+.img-upload__actions {
+  display: flex; gap: 8px; margin-top: 8px;
+}
+.img-upload__btn {
+  padding: 6px 14px; border-radius: 3px;
+  font-family: var(--font-body); font-size: 0.7rem;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  cursor: pointer; border: 1.5px solid;
+  transition: background 0.2s, color 0.2s;
+}
+.img-upload__btn--change {
+  border-color: var(--tobacco); color: var(--mahogany); background: none;
+}
+.img-upload__btn--change:hover { background: var(--tobacco); color: var(--mahogany); }
+.img-upload__btn--clear {
+  border-color: var(--vanilla-dk); color: var(--mountain); background: none;
+}
+.img-upload__btn--clear:hover { border-color: #C0392B; color: #C0392B; }
+
+/* Error */
+.img-upload__error {
+  font-size: 0.72rem; color: #C0392B;
+  margin-top: 6px; letter-spacing: 0.03em;
+}

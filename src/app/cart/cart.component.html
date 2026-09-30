@@ -1,0 +1,75 @@
+<div class="nc-cart" style="margin-top: var(--nav-h, 68px)">
+  <div class="nc-cart__inner">
+    <div class="nc-cart__header">
+      <p class="nc-eyebrow">✦ Your Selection</p>
+      <h1>Shopping Bag</h1>
+    </div>
+
+    <ng-container *ngIf="cartItems$ | async as items">
+
+      <!-- EMPTY -->
+      <div class="nc-cart__empty" *ngIf="items.length === 0">
+        <div class="nc-cart__empty-icon">🛍</div>
+        <h3>Your bag is empty</h3>
+        <p>Discover the collection and add pieces you love.</p>
+        <a routerLink="/products" class="nc-cart__shop-btn">Browse Collection</a>
+      </div>
+
+      <!-- ITEMS -->
+      <div class="nc-cart__content" *ngIf="items.length > 0">
+        <div class="nc-cart__items">
+          <div class="nc-cart-item" *ngFor="let item of items">
+            <div class="nc-cart-item__img">
+              <img [src]="item.image" [alt]="item.name" onerror="this.src='assets/ProductPic/pic5.jpeg'"/>
+            </div>
+            <div class="nc-cart-item__info">
+              <h3>{{ item.name }}</h3>
+              <p class="nc-cart-item__size" *ngIf="item.selectedSize">Size: {{ item.selectedSize }}</p>
+              <p class="nc-cart-item__price">R{{ item.price }}</p>
+            </div>
+            <div class="nc-cart-item__qty">
+              <button (click)="decrease(item.id, item.selectedSize)">−</button>
+              <span>{{ item.quantity }}</span>
+              <button (click)="increase(item.id, item.selectedSize)">+</button>
+            </div>
+            <div class="nc-cart-item__subtotal">R{{ item.price * item.quantity }}</div>
+            <button class="nc-cart-item__remove" (click)="remove(item.id, item.selectedSize)" title="Remove">✕</button>
+          </div>
+        </div>
+
+        <div class="nc-cart__summary">
+          <h3>Order Summary</h3>
+          <div class="nc-cart__summary-row">
+            <span>Subtotal ({{ items.length }} item{{ items.length !== 1 ? 's' : '' }})</span>
+            <span>R{{ getTotal(items) }}</span>
+          </div>
+          <div class="nc-cart__summary-row">
+            <span>Shipping</span>
+            <span>{{ getTotal(items) >= 800 ? 'FREE' : 'Calculated at checkout' }}</span>
+          </div>
+          <div class="nc-cart__summary-row nc-cart__summary-row--total">
+            <span>Total</span>
+            <span>R{{ getTotal(items) }}</span>
+          </div>
+          <div class="nc-cart__free-ship" *ngIf="getTotal(items) < 800">
+            <p>Add R{{ 800 - getTotal(items) }} more for free shipping</p>
+            <div class="nc-cart__free-ship-bar">
+              <div class="nc-cart__free-ship-fill" [style.width.%]="(getTotal(items) / 800) * 100"></div>
+            </div>
+          </div>
+          <a routerLink="/checkout" class="nc-cart__checkout">Proceed to Checkout</a>
+          <a routerLink="/products" class="nc-cart__continue">← Continue Shopping</a>
+        </div>
+      </div>
+
+    </ng-container>
+  </div>
+</div>
+
+
+
+  
+  
+  
+  
+  

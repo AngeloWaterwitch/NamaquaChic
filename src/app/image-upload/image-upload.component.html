@@ -1,0 +1,57 @@
+<div class="img-upload">
+  <p class="img-upload__label" *ngIf="label">{{ label }}</p>
+
+  <!-- Drop zone -->
+  <div
+    class="img-upload__zone"
+    [class.img-upload__zone--drag]="dragOver"
+    [class.img-upload__zone--has-img]="currentUrl && !uploading"
+    (click)="openPicker()"
+    (drop)="onDrop($event)"
+    (dragover)="onDragOver($event)"
+    (dragleave)="onDragLeave()">
+
+    <!-- Preview -->
+    <img *ngIf="currentUrl && !uploading" [src]="currentUrl" class="img-upload__preview" alt="preview"/>
+
+    <!-- Upload progress -->
+    <div class="img-upload__progress" *ngIf="uploading">
+      <div class="img-upload__spinner"></div>
+      <p>Uploading… {{ progress }}%</p>
+      <div class="img-upload__bar">
+        <div class="img-upload__bar-fill" [style.width.%]="progress"></div>
+      </div>
+    </div>
+
+    <!-- Empty state -->
+    <div class="img-upload__empty" *ngIf="!currentUrl && !uploading">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/>
+        <polyline points="21 15 16 10 5 21"/>
+      </svg>
+      <p>Click or drag an image here</p>
+      <span>JPG, PNG, WebP, GIF · Max 5MB</span>
+    </div>
+
+    <!-- Hover overlay on existing image -->
+    <div class="img-upload__overlay" *ngIf="currentUrl && !uploading">
+      <span>Change Image</span>
+    </div>
+  </div>
+
+  <!-- Actions row -->
+  <div class="img-upload__actions" *ngIf="currentUrl && !uploading">
+    <button class="img-upload__btn img-upload__btn--change" (click)="openPicker()">Upload New</button>
+    <button class="img-upload__btn img-upload__btn--clear"  (click)="clearImage(); $event.stopPropagation()">Remove</button>
+  </div>
+
+  <!-- Error -->
+  <p class="img-upload__error" *ngIf="error">{{ error }}</p>
+
+  <!-- Hidden file input -->
+  <input
+    #fileInput type="file"
+    accept="image/jpeg,image/png,image/webp,image/gif"
+    style="display:none"
+    (change)="onFileSelected($event)"/>
+</div>

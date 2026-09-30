@@ -1,0 +1,1285 @@
+<!-- ═══ LOGIN ═══ -->
+<div class="ad-login-wrap" *ngIf="!(api.isLoggedIn$ | async)">
+  <div class="ad-login">
+    <p class="ad-login__star">✦</p>
+    <h2 class="ad-login__title">NamakwaChic Admin</h2>
+    <p class="ad-login__sub">Sign in to manage your website</p>
+    <div class="ad-field"><label>Email</label><input type="email" [(ngModel)]="loginEmail" placeholder="admin@namakwachic.com"/></div>
+    <div class="ad-field" style="margin-top:12px"><label>Password</label><input type="password" [(ngModel)]="loginPassword" placeholder="••••••••" (keyup.enter)="doLogin()"/></div>
+    <p class="ad-err-msg" *ngIf="loginError">{{ loginError }}</p>
+    <button class="ad-save-btn" style="width:100%;margin-top:16px;justify-content:center" (click)="doLogin()" [disabled]="loggingIn">
+      {{ loggingIn ? 'Signing in…' : 'Sign In' }}
+    </button>
+  </div>
+</div>
+
+<!-- ═══ DASHBOARD SHELL ═══ -->
+<div class="ad-shell" *ngIf="(api.isLoggedIn$ | async)">
+
+  <!-- SIDEBAR -->
+  <aside class="ad-sidebar">
+    <div class="ad-sidebar__brand"><span class="ad-sidebar__star">✦</span><span class="ad-sidebar__name">NamakwaChic</span></div>
+    <p class="ad-sidebar__label">Admin Dashboard</p>
+    <nav class="ad-nav">
+      <button class="ad-nav__item" [class.active]="activeSection==='dashboard'"   (click)="setSection('dashboard')">📊 Dashboard</button>
+      <button class="ad-nav__item" [class.active]="activeSection==='home'"        (click)="setSection('home')">🏠 Home Page</button>
+      <button class="ad-nav__item" [class.active]="activeSection==='images'"      (click)="setSection('images')">🖼 Page Images</button>
+      <button class="ad-nav__item" [class.active]="activeSection==='about'"       (click)="setSection('about')">📖 About Page</button>
+      <button class="ad-nav__item" [class.active]="activeSection==='services'"    (click)="setSection('services')">⚙️ Services</button>
+      <button class="ad-nav__item" [class.active]="activeSection==='products'"    (click)="setSection('products')">👗 Products</button>
+      <button class="ad-nav__item" [class.active]="activeSection==='blog'"        (click)="setSection('blog')">✍️ Blog Posts</button>
+      <button class="ad-nav__item" [class.active]="activeSection==='contact'"     (click)="setSection('contact')">📍 Contact</button>
+      <button class="ad-nav__item" [class.active]="activeSection==='media'"       (click)="setSection('media')">🎬 Video & Live</button>
+      <button class="ad-nav__item" [class.active]="activeSection==='maintenance'" (click)="setSection('maintenance')">🔧 Maintenance</button>
+      <button class="ad-nav__item" [class.active]="activeSection==='theme'"       (click)="setSection('theme')">🎨 Theme & Fonts</button>
+      <button class="ad-nav__item" [class.active]="activeSection==='subscribers'" (click)="setSection('subscribers')">📧 Subscribers</button>
+      <button class="ad-nav__item" [class.active]="activeSection==='orders'"      (click)="setSection('orders')">🛒 Orders</button>
+      <button class="ad-nav__item" [class.active]="activeSection==='seo'"         (click)="setSection('seo')">🔍 SEO</button>
+      <button class="ad-nav__item" [class.active]="activeSection==='analytics'"   (click)="setSection('analytics')">📈 Analytics</button>
+      <div class="ad-nav__group-label">Help Pages</div>
+      <button class="ad-nav__item" [class.active]="activeSection==='help-sizing'"  (click)="setSection('help-sizing')">📏 Size Guide</button>
+      <button class="ad-nav__item" [class.active]="activeSection==='help-shipping'"(click)="setSection('help-shipping')">🚚 Shipping</button>
+      <button class="ad-nav__item" [class.active]="activeSection==='help-faqs'"   (click)="setSection('help-faqs')">❓ FAQs</button>
+    </nav>
+    <button class="ad-logout" (click)="logout()">↩ Log Out</button>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="ad-main">
+    <div class="ad-topbar">
+      <h1 class="ad-topbar__title">
+        <ng-container [ngSwitch]="activeSection">
+          <span *ngSwitchCase="'dashboard'">Dashboard</span>
+          <span *ngSwitchCase="'home'">Home Page</span>
+          <span *ngSwitchCase="'images'">Page Images</span>
+          <span *ngSwitchCase="'about'">About Page</span>
+          <span *ngSwitchCase="'services'">Services Page</span>
+          <span *ngSwitchCase="'products'">Products</span>
+          <span *ngSwitchCase="'blog'">Blog Posts</span>
+          <span *ngSwitchCase="'contact'">Contact & Info</span>
+          <span *ngSwitchCase="'media'">Video & Live</span>
+          <span *ngSwitchCase="'maintenance'">Maintenance Mode</span>
+          <span *ngSwitchCase="'orders'">Orders</span>
+          <span *ngSwitchCase="'seo'">SEO Settings</span>
+          <span *ngSwitchCase="'analytics'">Analytics</span>
+          <span *ngSwitchCase="'help-sizing'">Size Guide Content</span>
+          <span *ngSwitchCase="'help-shipping'">Shipping &amp; Returns Content</span>
+          <span *ngSwitchCase="'help-faqs'">FAQs Content</span>
+          <span *ngSwitchCase="'theme'">Theme & Fonts</span>
+          <span *ngSwitchDefault>Subscribers</span>
+        </ng-container>
+      </h1>
+    </div>
+
+    <!-- ═══ TOAST NOTIFICATIONS ═══ -->
+    <div class="ad-toast ad-toast--ok" *ngIf="saveMsg" role="status" aria-live="polite">
+      <span class="ad-toast__icon">✦</span>
+      <span class="ad-toast__msg">{{ saveMsg }}</span>
+      <button class="ad-toast__close" (click)="dismissSaveMsg()" aria-label="Dismiss">×</button>
+      <span class="ad-toast__bar"></span>
+    </div>
+    <div class="ad-toast ad-toast--err" *ngIf="errorMsg" role="alert">
+      <span class="ad-toast__icon">!</span>
+      <span class="ad-toast__msg">{{ errorMsg }}</span>
+      <button class="ad-toast__close" (click)="dismissErrorMsg()" aria-label="Dismiss">×</button>
+      <span class="ad-toast__bar"></span>
+    </div>
+    <style>
+      .ad-toast {
+        position: fixed; bottom: 28px; right: 28px; z-index: 9999;
+        display: flex; align-items: center; gap: 12px;
+        max-width: 380px; padding: 16px 18px; border-radius: 10px;
+        background: #F1EADA; border: 1px solid #CEC1A8; color: #584739;
+        box-shadow: 0 12px 28px rgba(88,71,57,0.22), 0 2px 6px rgba(88,71,57,0.12);
+        font-size: 14.5px; line-height: 1.4; overflow: hidden;
+        animation: ad-toast-in 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+      }
+      .ad-toast--err { background: #FBF0EC; border-color: #D9A088; color: #7A3A26; }
+      .ad-toast__icon {
+        flex-shrink: 0; width: 26px; height: 26px; display: flex;
+        align-items: center; justify-content: center; border-radius: 50%;
+        background: #B59E7D; color: #F1EADA; font-size: 13px;
+      }
+      .ad-toast--err .ad-toast__icon { background: #A85C3F; color: #FBF0EC; font-weight: 700; }
+      .ad-toast__msg { flex: 1; }
+      .ad-toast__close {
+        flex-shrink: 0; background: none; border: none; color: inherit;
+        opacity: 0.5; font-size: 18px; line-height: 1; cursor: pointer; padding: 2px 4px;
+      }
+      .ad-toast__close:hover, .ad-toast__close:focus-visible { opacity: 1; }
+      .ad-toast__close:focus-visible { outline: 2px solid #584739; outline-offset: 2px; border-radius: 4px; }
+      .ad-toast__bar {
+        position: absolute; left: 0; bottom: 0; height: 3px;
+        background: #B59E7D; animation: ad-toast-shrink 3s linear forwards;
+      }
+      .ad-toast--err .ad-toast__bar { background: #A85C3F; animation-duration: 4s; }
+      @keyframes ad-toast-in { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+      @keyframes ad-toast-shrink { from { width: 100%; } to { width: 0%; } }
+      @media (prefers-reduced-motion: reduce) {
+        .ad-toast { animation: none; }
+        .ad-toast__bar { animation: none; display: none; }
+      }
+      @media (max-width: 640px) {
+        .ad-toast { left: 16px; right: 16px; bottom: 16px; max-width: none; }
+      }
+    </style>
+
+    <!-- ═══ DASHBOARD ═══ -->
+    <section *ngIf="activeSection==='dashboard'" class="ad-section">
+      <div class="ad-stats">
+        <div class="ad-stat" (click)="setSection('products')"><span class="ad-stat__icon">👗</span><div><p class="ad-stat__num">{{ products.length }}</p><p class="ad-stat__label">Products</p></div></div>
+        <div class="ad-stat" (click)="setSection('blog')"><span class="ad-stat__icon">✍️</span><div><p class="ad-stat__num">{{ blogs.length }}</p><p class="ad-stat__label">Blog Posts</p></div></div>
+        <div class="ad-stat" (click)="setSection('subscribers')"><span class="ad-stat__icon">📧</span><div><p class="ad-stat__num">{{ subscribers.length }}</p><p class="ad-stat__label">Subscribers</p></div></div>
+        <div class="ad-stat" (click)="setSection('orders')"><span class="ad-stat__icon">🛒</span><div><p class="ad-stat__num">{{ orders.length }}</p><p class="ad-stat__label">Orders</p></div></div>
+        <div class="ad-stat"><span class="ad-stat__icon">🟢</span><div><p class="ad-stat__num">Live</p><p class="ad-stat__label">Site Status</p></div></div>
+      </div>
+      <div class="ad-quicklinks">
+        <h3 class="ad-sub-title">Quick Actions</h3>
+        <div class="ad-ql-grid">
+          <button class="ad-ql-btn" (click)="setSection('products'); openProductForm()">+ Add Product</button>
+          <button class="ad-ql-btn" (click)="setSection('blog'); openBlogForm()">+ Blog Post</button>
+          <button class="ad-ql-btn" (click)="setSection('home')">Edit Hero</button>
+          <button class="ad-ql-btn" (click)="setSection('orders')">View Orders</button>
+          <button class="ad-ql-btn" (click)="setSection('analytics')">Analytics</button>
+          <button class="ad-ql-btn" (click)="setSection('theme')">Edit Theme</button>
+          <button class="ad-ql-btn" (click)="setSection('media')">Manage Video</button>
+          <button class="ad-ql-btn" (click)="setSection('images')">Edit Images</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ HOME PAGE ═══ -->
+    <section *ngIf="activeSection==='home'" class="ad-section">
+      <div class="ad-card">
+        <h3 class="ad-card__title">📣 Announcement Banner</h3>
+        <p class="ad-hint">Shown at the top of every page. Use it for sales, new drops, or announcements.</p>
+        <div class="ad-form-grid">
+          <div class="ad-field">
+            <label>Enable Banner</label>
+            <div class="ad-toggle">
+              <input type="checkbox" id="bannerEnabled" [(ngModel)]="homeContent.bannerEnabled"/>
+              <label for="bannerEnabled" class="ad-toggle__label">{{ homeContent.bannerEnabled ? 'Banner visible to visitors' : 'Banner hidden' }}</label>
+            </div>
+          </div>
+          <div class="ad-field">
+            <label>Banner Background Color</label>
+            <div class="ad-color-row">
+              <input type="color" [(ngModel)]="homeContent.bannerBg" style="width:44px;height:36px;border:none;cursor:pointer;border-radius:3px;padding:2px"/>
+              <input type="text"  [(ngModel)]="homeContent.bannerBg" placeholder="#B59E7D"/>
+            </div>
+          </div>
+          <div class="ad-field ad-field--full"><label>Banner Message</label><input type="text" [(ngModel)]="homeContent.bannerText" placeholder="✦ New Collection Dropping Friday — Don't Miss It"/></div>
+          <div class="ad-field"><label>Button/Link Text</label><input type="text" [(ngModel)]="homeContent.bannerLinkText" placeholder="Shop Now"/></div>
+          <div class="ad-field"><label>Button Link URL</label><input type="text" [(ngModel)]="homeContent.bannerLink" placeholder="/products"/></div>
+        </div>
+        <button class="ad-save-btn" (click)="saveContent('home')" [disabled]="saving">{{ saving ? 'Saving…' : 'Save Banner' }}</button>
+      </div>
+
+      <div class="ad-card">
+        <h3 class="ad-card__title">🌸 Hero Section</h3>
+        <div class="ad-form-grid">
+          <div class="ad-field"><label>Eyebrow Text</label><input type="text" [(ngModel)]="homeContent.heroEyebrow" placeholder="✦ New Season · 2025 Collection"/></div>
+          <div class="ad-field"><label>Hero Title</label><input type="text" [(ngModel)]="homeContent.heroTitle" placeholder="Wear the Desert in Bloom"/></div>
+          <div class="ad-field ad-field--full"><label>Hero Subtitle</label><textarea [(ngModel)]="homeContent.heroSubtitle" rows="3"></textarea></div>
+          <div class="ad-field"><label>Button Text</label><input type="text" [(ngModel)]="homeContent.heroButtonText" placeholder="Shop Now"/></div>
+        </div>
+        <button class="ad-save-btn" (click)="saveContent('home')" [disabled]="saving">{{ saving ? 'Saving…' : 'Save Hero' }}</button>
+      </div>
+
+      <div class="ad-card">
+        <h3 class="ad-card__title">🗂 Featured Carousel</h3>
+        <div class="ad-form-grid">
+          <div class="ad-field"><label>Section Eyebrow</label><input type="text" [(ngModel)]="homeContent.featuredSectionEyebrow"/></div>
+          <div class="ad-field"><label>Section Title</label><input type="text" [(ngModel)]="homeContent.featuredSectionTitle"/></div>
+          <div class="ad-field">
+            <label>Current Season (type any value)</label>
+            <input type="text" [(ngModel)]="homeContent.currentSeason" placeholder="e.g. Spring/Summer 2026 or Resort 2027"/>
+            <p class="ad-hint" style="margin-top:6px">Type any season name and year you like — not limited to a dropdown.</p>
+          </div>
+        </div>
+        <button class="ad-save-btn" (click)="saveContent('home')" [disabled]="saving">Save Carousel Settings</button>
+      </div>
+
+      <div class="ad-card">
+        <h3 class="ad-card__title">🔗 Social Media Links</h3>
+        <div class="ad-form-grid">
+          <div class="ad-field"><label>Instagram</label><input type="url" [(ngModel)]="homeContent.socialInstagram"/></div>
+          <div class="ad-field"><label>Facebook</label><input type="url" [(ngModel)]="homeContent.socialFacebook"/></div>
+          <div class="ad-field"><label>Twitter / X</label><input type="url" [(ngModel)]="homeContent.socialTwitter"/></div>
+          <div class="ad-field"><label>TikTok</label><input type="url" [(ngModel)]="homeContent.socialTiktok"/></div>
+          <div class="ad-field"><label>LinkedIn</label><input type="url" [(ngModel)]="homeContent.socialLinkedin"/></div>
+        </div>
+        <button class="ad-save-btn" (click)="saveContent('home')" [disabled]="saving">Save Social Links</button>
+      </div>
+    </section>
+
+    <!-- ═══ PAGE IMAGES ═══ -->
+    <section *ngIf="activeSection==='images'" class="ad-section">
+      <div class="ad-card">
+        <h3 class="ad-card__title">🖼 Page Hero Images</h3>
+        <p class="ad-hint">Upload images directly from your device or paste a URL below each uploader.</p>
+        <div class="ad-form-grid">
+          <div class="ad-field ad-field--full">
+            <app-image-upload label="Home Page — Hero Background" folder="pages"
+              [currentUrl]="imagesContent.heroBgImage || ''"
+              (uploaded)="imagesContent.heroBgImage = $event; saveContent('images')">
+            </app-image-upload>
+          </div>
+          <div class="ad-field ad-field--full">
+            <app-image-upload label="About Page — Hero Image" folder="pages"
+              [currentUrl]="imagesContent.aboutHeroImage || ''"
+              (uploaded)="imagesContent.aboutHeroImage = $event; saveContent('images')">
+            </app-image-upload>
+          </div>
+          <div class="ad-field ad-field--full">
+            <app-image-upload label="Blog Page — Hero Background" folder="pages"
+              [currentUrl]="imagesContent.blogHeroImage || ''"
+              (uploaded)="imagesContent.blogHeroImage = $event; saveContent('images')">
+            </app-image-upload>
+          </div>
+          <div class="ad-field ad-field--full">
+            <app-image-upload label="Services Page — Hero Background" folder="pages"
+              [currentUrl]="imagesContent.servicesHeroImage || ''"
+              (uploaded)="imagesContent.servicesHeroImage = $event; saveContent('images')">
+            </app-image-upload>
+          </div>
+          <div class="ad-field ad-field--full">
+            <app-image-upload label="Contact Page — Hero Background" folder="pages"
+              [currentUrl]="imagesContent.contactHeroImage || ''"
+              (uploaded)="imagesContent.contactHeroImage = $event; saveContent('images')">
+            </app-image-upload>
+          </div>
+        </div>
+        <button class="ad-save-btn" (click)="saveContent('images')" [disabled]="saving">{{ saving ? 'Saving…' : 'Save All Images' }}</button>
+      </div>
+    </section>
+
+    <!-- ═══ ABOUT ═══ -->
+    <section *ngIf="activeSection==='about'" class="ad-section">
+      <div class="ad-card">
+        <h3 class="ad-card__title">📖 About Page</h3>
+        <div class="ad-form-grid">
+          <div class="ad-field"><label>Page Title</label><input type="text" [(ngModel)]="aboutContent.aboutTitle"/></div>
+          <div class="ad-field"><label>Tagline</label><input type="text" [(ngModel)]="aboutContent.aboutTagline"/></div>
+          <div class="ad-field"><label>Story Title</label><input type="text" [(ngModel)]="aboutContent.aboutStoryTitle"/></div>
+          <div class="ad-field">
+            <app-image-upload label="About Image" folder="pages"
+              [currentUrl]="aboutContent.aboutImage || ''"
+              (uploaded)="aboutContent.aboutImage = $event">
+            </app-image-upload>
+          </div>
+          <div class="ad-field ad-field--full"><label>Body Paragraph 1</label><textarea [(ngModel)]="aboutContent.aboutBody1" rows="4"></textarea></div>
+          <div class="ad-field ad-field--full"><label>Body Paragraph 2</label><textarea [(ngModel)]="aboutContent.aboutBody2" rows="4"></textarea></div>
+        </div>
+        <h4 class="ad-sub-title" style="margin:24px 0 12px">Brand Values</h4>
+        <div class="ad-form-grid">
+          <div class="ad-field"><label>Value 1 Title</label><input type="text" [(ngModel)]="aboutContent.aboutValue1Title"/></div>
+          <div class="ad-field"><label>Value 1 Text</label><input type="text" [(ngModel)]="aboutContent.aboutValue1Text"/></div>
+          <div class="ad-field"><label>Value 2 Title</label><input type="text" [(ngModel)]="aboutContent.aboutValue2Title"/></div>
+          <div class="ad-field"><label>Value 2 Text</label><input type="text" [(ngModel)]="aboutContent.aboutValue2Text"/></div>
+          <div class="ad-field"><label>Value 3 Title</label><input type="text" [(ngModel)]="aboutContent.aboutValue3Title"/></div>
+          <div class="ad-field"><label>Value 3 Text</label><input type="text" [(ngModel)]="aboutContent.aboutValue3Text"/></div>
+          <div class="ad-field"><label>Mission Title</label><input type="text" [(ngModel)]="aboutContent.aboutMissionTitle"/></div>
+          <div class="ad-field ad-field--full"><label>Mission Text</label><textarea [(ngModel)]="aboutContent.aboutMissionText" rows="3"></textarea></div>
+        </div>
+        <button class="ad-save-btn" (click)="saveContent('about')" [disabled]="saving">{{ saving ? 'Saving…' : 'Save About Page' }}</button>
+      </div>
+    </section>
+
+    <!-- ═══ SERVICES ═══ -->
+    <section *ngIf="activeSection==='services'" class="ad-section">
+      <div class="ad-card">
+        <h3 class="ad-card__title">⚙️ Services Page</h3>
+        <div class="ad-form-grid">
+          <div class="ad-field"><label>Service 1 Title</label><input type="text" [(ngModel)]="servicesContent.service1Title"/></div>
+          <div class="ad-field ad-field--full"><label>Service 1 Description</label><textarea [(ngModel)]="servicesContent.service1Text" rows="3"></textarea></div>
+          <div class="ad-field"><label>Service 2 Title</label><input type="text" [(ngModel)]="servicesContent.service2Title"/></div>
+          <div class="ad-field ad-field--full"><label>Service 2 Description</label><textarea [(ngModel)]="servicesContent.service2Text" rows="3"></textarea></div>
+          <div class="ad-field"><label>Service 3 Title</label><input type="text" [(ngModel)]="servicesContent.service3Title"/></div>
+          <div class="ad-field ad-field--full"><label>Service 3 Description</label><textarea [(ngModel)]="servicesContent.service3Text" rows="3"></textarea></div>
+          <div class="ad-field ad-field--full"><label>Delivery Learn More Content</label><textarea [(ngModel)]="servicesContent.deliveryLearnMore" rows="5"></textarea></div>
+        </div>
+        <button class="ad-save-btn" (click)="saveContent('services')" [disabled]="saving">{{ saving ? 'Saving…' : 'Save Services' }}</button>
+      </div>
+    </section>
+
+    <!-- ═══ PRODUCTS ═══ -->
+    <section *ngIf="activeSection==='products'" class="ad-section">
+      <div class="ad-toolbar">
+        <button class="ad-add-btn" (click)="openProductForm()">+ Add New Product</button>
+      </div>
+      <!-- Modal -->
+      <div class="ad-modal-bg" *ngIf="showProductForm" (click)="closeProductForm()">
+        <div class="ad-modal" (click)="$event.stopPropagation()">
+          <div class="ad-modal__head"><h3>{{ editingProduct ? 'Edit Product' : 'Add Product' }}</h3><button class="ad-modal__close" (click)="closeProductForm()">×</button></div>
+          <div class="ad-modal__body">
+            <div class="ad-form-grid">
+              <div class="ad-field"><label>Name *</label><input type="text" [(ngModel)]="productForm.name"/></div>
+              <div class="ad-field">
+                <label>Category</label>
+                <div class="ad-cat-row">
+                  <select [(ngModel)]="productForm.category">
+                    <option *ngFor="let c of categories" [value]="c">{{c}}</option>
+                  </select>
+                  <button type="button" class="ad-cat-add-btn" (click)="showNewCategory = !showNewCategory">+ New</button>
+                </div>
+                <div class="ad-cat-new" *ngIf="showNewCategory">
+                  <input type="text" [(ngModel)]="newCategoryName" placeholder="New category name" (keyup.enter)="addCategory()"/>
+                  <button type="button" class="ad-cat-confirm-btn" (click)="addCategory()">Add</button>
+                  <button type="button" class="ad-cat-cancel-btn" (click)="showNewCategory=false; newCategoryName=''">Cancel</button>
+                </div>
+              </div>
+              <style>
+                .ad-cat-row { display: flex; gap: 8px; align-items: center; }
+                .ad-cat-row select { flex: 1; }
+                .ad-cat-add-btn { flex-shrink: 0; padding: 8px 12px; border-radius: 6px; border: 1px solid #CEC1A8; background: #F1EADA; color: #584739; font-size: 13px; cursor: pointer; white-space: nowrap; }
+                .ad-cat-add-btn:hover { background: #E8DEC8; }
+                .ad-cat-new { display: flex; gap: 8px; margin-top: 8px; align-items: center; }
+                .ad-cat-new input { flex: 1; padding: 8px 10px; border-radius: 6px; border: 1px solid #CEC1A8; font-size: 14px; }
+                .ad-cat-confirm-btn { padding: 8px 14px; border-radius: 6px; border: none; background: #584739; color: #F1EADA; font-size: 13px; cursor: pointer; }
+                .ad-cat-confirm-btn:hover { background: #6B5847; }
+                .ad-cat-cancel-btn { padding: 8px 12px; border-radius: 6px; border: 1px solid #CEC1A8; background: none; color: #584739; opacity: 0.7; font-size: 13px; cursor: pointer; }
+                .ad-cat-cancel-btn:hover { opacity: 1; }
+              </style>
+              <div class="ad-field"><label>Price (R)</label><input type="number" [(ngModel)]="productForm.price" min="0"/></div>
+              <div class="ad-field"><label>Original Price (sale)</label><input type="number" [(ngModel)]="productForm.originalPrice" min="0"/></div>
+              <div class="ad-field ad-field--full"><label>Description</label><textarea [(ngModel)]="productForm.description" rows="3"></textarea></div>
+              <div class="ad-field ad-field--full">
+                <app-image-upload label="Product Image" folder="products"
+                  [currentUrl]="productForm.image || ''"
+                  (uploaded)="productForm.image = $event">
+                </app-image-upload>
+              </div>
+              <div class="ad-field"><label>Material</label><input type="text" [(ngModel)]="productForm.material"/></div>
+              <div class="ad-field"><label>Type</label><input type="text" [(ngModel)]="productForm.type" placeholder="Midi / Maxi / Wrap..."/></div>
+              <div class="ad-field"><label>Status</label><select [(ngModel)]="productForm.status"><option value="instock">In Stock</option><option value="outofstock">Out of Stock</option><option value="limited">Limited Drop</option><option value="comingsoon">Coming Soon</option></select></div>
+              <div class="ad-field"><label>Badge</label><select [(ngModel)]="productForm.badge"><option *ngFor="let b of badges" [value]="b">{{b||'None'}}</option></select></div>
+              <div class="ad-field"><label>Launch Date</label><input type="date" [(ngModel)]="productForm.launchDate"/></div>
+              <div class="ad-field ad-field--full"><label>Launch Description</label><textarea [(ngModel)]="productForm.launchDescription" rows="2"></textarea></div>
+              <div class="ad-field ad-field--full">
+                <label>Sizes</label>
+                <div class="ad-sizes">
+                  <button *ngFor="let s of ['XS','S','M','L','XL','XXL','6','8','10','12','14','16']"
+                    class="ad-size-btn" [class.active]="hasSize(s)" (click)="toggleSize(s)" type="button">{{s}}</button>
+                </div>
+              </div>
+              <div class="ad-field"><label>Colours (comma separated)</label><input type="text" [(ngModel)]="productForm.colours" placeholder="Black, White, Nude"/></div>
+              <div class="ad-field">
+                <label>Published</label>
+                <div class="ad-toggle"><input type="checkbox" id="published" [(ngModel)]="productForm.published"/><label for="published" class="ad-toggle__label">{{productForm.published !== false ? 'Yes — visible in shop' : 'No — hidden from site'}}</label></div>
+              </div>
+              <div class="ad-field">
+                <label>Feature on Home Carousel</label>
+                <div class="ad-toggle"><input type="checkbox" id="isLive" [(ngModel)]="productForm.isLive"/><label for="isLive" class="ad-toggle__label">{{productForm.isLive ? 'Yes — shown in carousel' : 'No'}}</label></div>
+              </div>
+            </div>
+          </div>
+          <div class="ad-modal__foot">
+            <button class="ad-cancel-btn" (click)="closeProductForm()">Cancel</button>
+            <button class="ad-save-btn" (click)="saveProduct()" [disabled]="saving">{{ saving ? 'Saving…' : 'Save Product' }}</button>
+          </div>
+        </div>
+      </div>
+      <!-- Table -->
+      <div class="ad-table-wrap">
+        <table class="ad-table">
+          <thead><tr><th>Image</th><th>Name</th><th>Category</th><th>Price</th><th>Status</th><th>Badge</th><th>Published</th><th>Home</th><th>Actions</th></tr></thead>
+          <tbody>
+            <tr *ngFor="let p of products">
+              <td><img [src]="p.image" [alt]="p.name" class="ad-table__img" onerror="this.src='assets/ProductPic/pic5.jpeg'"/></td>
+              <td class="ad-table__name">{{p.name}}</td>
+              <td><span class="ad-chip">{{p.category}}</span></td>
+              <td>R{{p.price}}</td>
+              <td><span class="ad-status" [ngClass]="'ad-status--'+p.status">{{p.status}}</span></td>
+              <td><span class="ad-badge" *ngIf="p.badge">{{p.badge}}</span></td>
+              <td><span class="ad-live" [class.on]="p.published !== false">{{p.published !== false ? '✓':'—'}}</span></td>
+              <td><span class="ad-live" [class.on]="p.isLive">{{p.isLive?'✓':'—'}}</span></td>
+              <td class="ad-table__actions">
+                <button class="ad-edit-btn" (click)="openProductForm(p)">Edit</button>
+                <button class="ad-del-btn"  (click)="deleteProduct(p._id)">Delete</button>
+              </td>
+            </tr>
+            <tr *ngIf="!products.length"><td colspan="9" class="ad-empty">No products yet.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ═══ BLOG ═══ -->
+    <section *ngIf="activeSection==='blog'" class="ad-section">
+      <div class="ad-toolbar"><button class="ad-add-btn" (click)="openBlogForm()">+ New Post</button></div>
+      <div class="ad-modal-bg" *ngIf="showBlogForm" (click)="closeBlogForm()">
+        <div class="ad-modal" (click)="$event.stopPropagation()">
+          <div class="ad-modal__head"><h3>{{editingBlog ? 'Edit Post' : 'New Post'}}</h3><button class="ad-modal__close" (click)="closeBlogForm()">×</button></div>
+          <div class="ad-modal__body">
+            <div class="ad-form-grid">
+              <div class="ad-field"><label>Title *</label><input type="text" [(ngModel)]="blogForm.title"/></div>
+              <div class="ad-field"><label>Category</label><select [(ngModel)]="blogForm.category"><option *ngFor="let c of blogCategories" [value]="c">{{c}}</option></select></div>
+              <div class="ad-field"><label>Author</label><input type="text" [(ngModel)]="blogForm.author"/></div>
+              <div class="ad-field">
+                <app-image-upload label="Cover Image" folder="blog"
+                  [currentUrl]="blogForm.image || ''"
+                  (uploaded)="blogForm.image = $event">
+                </app-image-upload>
+              </div>
+              <div class="ad-field ad-field--full"><label>Excerpt</label><textarea [(ngModel)]="blogForm.excerpt" rows="2"></textarea></div>
+              <div class="ad-field ad-field--full"><label>Full Content</label><textarea [(ngModel)]="blogForm.content" rows="12"></textarea></div>
+              <div class="ad-field ad-field--full"><label>Tags (comma separated)</label><input type="text" [(ngModel)]="blogForm.tags"/></div>
+              <div class="ad-field"><label>Trending</label><div class="ad-toggle"><input type="checkbox" id="trending" [(ngModel)]="blogForm.trending"/><label for="trending" class="ad-toggle__label">{{blogForm.trending?'Yes':'No'}}</label></div></div>
+              <div class="ad-field"><label>Published</label><div class="ad-toggle"><input type="checkbox" id="published" [(ngModel)]="blogForm.published"/><label for="published" class="ad-toggle__label">{{blogForm.published?'Published':'Draft'}}</label></div></div>
+            </div>
+          </div>
+          <div class="ad-modal__foot">
+            <button class="ad-cancel-btn" (click)="closeBlogForm()">Cancel</button>
+            <button class="ad-save-btn" (click)="saveBlog()" [disabled]="saving">{{saving?'Saving…':blogForm.published?'Publish':'Save Draft'}}</button>
+          </div>
+        </div>
+      </div>
+      <div class="ad-table-wrap">
+        <table class="ad-table">
+          <thead><tr><th>Image</th><th>Title</th><th>Category</th><th>Status</th><th>Trending</th><th>Actions</th></tr></thead>
+          <tbody>
+            <tr *ngFor="let b of blogs">
+              <td><img [src]="b.image" [alt]="b.title" class="ad-table__img" onerror="this.src='assets/ProductPic/pic5.jpeg'"/></td>
+              <td class="ad-table__name">{{b.title}}</td>
+              <td><span class="ad-chip">{{b.category}}</span></td>
+              <td><span class="ad-status" [ngClass]="b.published?'ad-status--instock':'ad-status--comingsoon'">{{b.published?'Published':'Draft'}}</span></td>
+              <td><span class="ad-live" [class.on]="b.trending">{{b.trending?'🔥':'—'}}</span></td>
+              <td class="ad-table__actions"><button class="ad-edit-btn" (click)="openBlogForm(b)">Edit</button><button class="ad-del-btn" (click)="deleteBlog(b._id)">Delete</button></td>
+            </tr>
+            <tr *ngIf="!blogs.length"><td colspan="6" class="ad-empty">No posts yet.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ═══ CONTACT ═══ -->
+    <section *ngIf="activeSection==='contact'" class="ad-section">
+      <div class="ad-card">
+        <h3 class="ad-card__title">📍 Business Information</h3>
+        <div class="ad-form-grid">
+          <div class="ad-field ad-field--full"><label>Address</label><input type="text" [(ngModel)]="contactContent.contactAddress"/></div>
+          <div class="ad-field"><label>Email</label><input type="email" [(ngModel)]="contactContent.contactEmail"/></div>
+          <div class="ad-field"><label>Phone</label><input type="tel" [(ngModel)]="contactContent.contactPhone"/></div>
+          <div class="ad-field"><label>Weekday Hours</label><input type="text" [(ngModel)]="contactContent.contactHoursWeekday"/></div>
+          <div class="ad-field"><label>Saturday Hours</label><input type="text" [(ngModel)]="contactContent.contactHoursSaturday"/></div>
+        </div>
+        <button class="ad-save-btn" (click)="saveContent('contact')" [disabled]="saving">{{ saving ? 'Saving…' : 'Save Contact Info' }}</button>
+      </div>
+    </section>
+
+    <!-- ═══ VIDEO & LIVE ═══ -->
+    <section *ngIf="activeSection==='media'" class="ad-section">
+      <div class="ad-card">
+        <h3 class="ad-card__title">🎬 Video & Livestream</h3>
+        <p class="ad-hint">Display a video or live stream on your home page. Supports YouTube, Vimeo, or direct video URLs. For livestreams, use a YouTube Live or streaming service embed URL.</p>
+
+        <div class="ad-form-grid">
+          <div class="ad-field">
+            <label>Show Video Section on Home Page</label>
+            <div class="ad-toggle">
+              <input type="checkbox" id="videoEnabled" [(ngModel)]="mediaContent.videoEnabled"/>
+              <label for="videoEnabled" class="ad-toggle__label">{{mediaContent.videoEnabled ? 'Visible to visitors' : 'Hidden'}}</label>
+            </div>
+          </div>
+          <div class="ad-field">
+            <label>Is this a Live Stream right now?</label>
+            <div class="ad-toggle">
+              <input type="checkbox" id="videoIsLive" [(ngModel)]="mediaContent.videoIsLive"/>
+              <label for="videoIsLive" class="ad-toggle__label">{{mediaContent.videoIsLive ? '🔴 LIVE — shows live badge' : 'Not live (regular video)'}}</label>
+            </div>
+          </div>
+          <div class="ad-field">
+            <label>Video Type</label>
+            <select [(ngModel)]="mediaContent.videoType">
+              <option value="youtube">YouTube / YouTube Live</option>
+              <option value="vimeo">Vimeo</option>
+              <option value="direct">Direct video URL (.mp4)</option>
+              <option value="livestream">Other livestream embed URL</option>
+            </select>
+          </div>
+          <div class="ad-field ad-field--full">
+            <label>Video / Stream URL</label>
+            <input type="text" [(ngModel)]="mediaContent.videoUrl"
+              placeholder="https://youtube.com/watch?v=... or https://youtu.be/..."/>
+            <p class="ad-hint" style="margin-top:6px">
+              YouTube: paste the full video or live URL and we'll extract the embed ID automatically.
+            </p>
+          </div>
+          <div class="ad-field"><label>Section Title</label><input type="text" [(ngModel)]="mediaContent.videoTitle" placeholder="Watch the Drop Live"/></div>
+          <div class="ad-field ad-field--full"><label>Section Description</label><textarea [(ngModel)]="mediaContent.videoDescription" rows="2" placeholder="Join us live as we reveal the new collection…"></textarea></div>
+          <div class="ad-field"><label>Scheduled Date & Time (optional)</label><input type="datetime-local" [(ngModel)]="mediaContent.videoScheduled"/></div>
+          <div class="ad-field ad-field--full">
+            <app-image-upload label="Thumbnail / Poster Image (shown before play)" folder="media"
+              [currentUrl]="mediaContent.videoThumbnail || ''"
+              (uploaded)="mediaContent.videoThumbnail = $event">
+            </app-image-upload>
+          </div>
+        </div>
+
+        <!-- Preview -->
+        <div class="ad-video-preview" *ngIf="mediaContent.videoUrl && (mediaContent.videoType === 'youtube' || mediaContent.videoType === 'vimeo')">
+          <p class="ad-sub-title" style="margin-bottom:10px">Preview</p>
+          <iframe [src]="getVideoEmbedUrl() | safe" width="100%" height="320" frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen style="border-radius:4px;display:block"></iframe>
+        </div>
+
+        <button class="ad-save-btn" style="margin-top:20px" (click)="saveContent('media')" [disabled]="saving">{{ saving ? 'Saving…' : 'Save Video Settings' }}</button>
+      </div>
+    </section>
+
+    <!-- ═══ THEME & FONTS ═══ -->
+    <section *ngIf="activeSection==='theme'" class="ad-section">
+      <div class="ad-card">
+        <h3 class="ad-card__title">🎨 Color Presets</h3>
+        <p class="ad-hint">Click a preset to apply it, then click Save to publish to the live site.</p>
+        <div class="ad-presets">
+          <button *ngFor="let p of colorPresets" class="ad-preset" (click)="applyPreset(p)">
+            <div class="ad-preset__swatches">
+              <span [style.background]="p.mahogany"></span>
+              <span [style.background]="p.tobacco"></span>
+              <span [style.background]="p.vanilla"></span>
+            </div>
+            <span class="ad-preset__name">{{p.name}}</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="ad-card">
+        <h3 class="ad-card__title">🖌 Custom Colors</h3>
+        <p class="ad-hint">Fine-tune individual colors. Changes apply across the entire site instantly on Save.</p>
+        <div class="ad-form-grid">
+          <div class="ad-field">
+            <label>Primary Dark (Mahogany)</label>
+            <div class="ad-color-row">
+              <input type="color" [(ngModel)]="themeContent.colorMahogany"/>
+              <input type="text"  [(ngModel)]="themeContent.colorMahogany" placeholder="#584739"/>
+            </div>
+          </div>
+          <div class="ad-field">
+            <label>Accent (Tobacco)</label>
+            <div class="ad-color-row">
+              <input type="color" [(ngModel)]="themeContent.colorTobacco"/>
+              <input type="text"  [(ngModel)]="themeContent.colorTobacco" placeholder="#B59E7D"/>
+            </div>
+          </div>
+          <div class="ad-field">
+            <label>Accent Light</label>
+            <div class="ad-color-row">
+              <input type="color" [(ngModel)]="themeContent.colorTobaccoLt"/>
+              <input type="text"  [(ngModel)]="themeContent.colorTobaccoLt" placeholder="#D4C4A8"/>
+            </div>
+          </div>
+          <div class="ad-field">
+            <label>Page Background (Vanilla)</label>
+            <div class="ad-color-row">
+              <input type="color" [(ngModel)]="themeContent.colorVanilla"/>
+              <input type="text"  [(ngModel)]="themeContent.colorVanilla" placeholder="#F1EADA"/>
+            </div>
+          </div>
+          <div class="ad-field">
+            <label>Card Background</label>
+            <div class="ad-color-row">
+              <input type="color" [(ngModel)]="themeContent.colorVanillaDk"/>
+              <input type="text"  [(ngModel)]="themeContent.colorVanillaDk" placeholder="#E8DEC8"/>
+            </div>
+          </div>
+          <div class="ad-field">
+            <label>Secondary Text</label>
+            <div class="ad-color-row">
+              <input type="color" [(ngModel)]="themeContent.colorMountain"/>
+              <input type="text"  [(ngModel)]="themeContent.colorMountain" placeholder="#AAA396"/>
+            </div>
+          </div>
+          <div class="ad-field">
+            <label>Borders / Sand</label>
+            <div class="ad-color-row">
+              <input type="color" [(ngModel)]="themeContent.colorSand"/>
+              <input type="text"  [(ngModel)]="themeContent.colorSand" placeholder="#CEC1A8"/>
+            </div>
+          </div>
+        </div>
+        <button class="ad-save-btn" (click)="saveContent('theme')" [disabled]="saving">{{ saving ? 'Saving…' : 'Save Colors' }}</button>
+      </div>
+
+      <div class="ad-card">
+        <h3 class="ad-card__title">🔤 Fonts</h3>
+        <p class="ad-hint">All fonts are loaded from Google Fonts. The heading font is used for titles and the brand name. The body font is used for all other text, buttons and labels.</p>
+        <div class="ad-form-grid">
+          <div class="ad-field">
+            <label>Heading Font</label>
+            <select [(ngModel)]="themeContent.fontHeading">
+              <option *ngFor="let f of headingFonts" [value]="f">{{f}}</option>
+            </select>
+          </div>
+          <div class="ad-field">
+            <label>Body Font</label>
+            <select [(ngModel)]="themeContent.fontBody">
+              <option *ngFor="let f of bodyFonts" [value]="f">{{f}}</option>
+            </select>
+          </div>
+        </div>
+        <button class="ad-save-btn" (click)="saveContent('theme')" [disabled]="saving">{{ saving ? 'Saving…' : 'Save Fonts' }}</button>
+      </div>
+    </section>
+
+    <!-- ═══ SUBSCRIBERS ═══ -->
+    <section *ngIf="activeSection==='subscribers'" class="ad-section">
+      <div class="ad-card">
+        <div class="ad-seo-card__header">
+          <h3 class="ad-card__title">📧 Subscriber List</h3>
+          <span style="font-size:0.75rem;color:var(--mountain)">{{ subscribers.length }} total</span>
+        </div>
+        <div class="ad-table-wrap">
+          <table class="ad-table">
+            <thead><tr><th>Email</th><th>Type</th><th>Product</th><th>Date</th><th></th></tr></thead>
+            <tbody>
+              <tr *ngFor="let s of subscribers">
+                <td>{{s.email}}</td>
+                <td><span class="ad-chip">{{s.type}}</span></td>
+                <td style="font-size:0.78rem;color:var(--mountain)">{{ s.productName || '—' }}</td>
+                <td>{{ (s.createdAt | date:'dd MMM yyyy') || '—' }}</td>
+                <td>
+                  <button class="ad-sub-remove"
+                    (click)="removeSubscriber(s._id)"
+                    [disabled]="removingSubscriberId === s.id"
+                    title="Remove subscriber">
+                    {{ removingSubscriberId === s.id ? '…' : '✕' }}
+                  </button>
+                </td>
+              </tr>
+              <tr *ngIf="!subscribers.length"><td colspan="5" class="ad-empty">No subscribers yet.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════
+         MAINTENANCE MODE
+    ══════════════════════════════════════════ -->
+    <section *ngIf="activeSection==='maintenance'" class="ad-section">
+
+      <!-- Status toggle card -->
+      <div class="ad-card ad-maintenance-status" [class.ad-maintenance-status--on]="maintenanceContent.maintenanceMode">
+        <div class="ad-maintenance-status__left">
+          <div class="ad-maintenance-status__indicator" [class.on]="maintenanceContent.maintenanceMode"></div>
+          <div>
+            <h3 class="ad-maintenance-status__title">
+              {{ maintenanceContent.maintenanceMode ? '🔧 Site is currently DOWN for maintenance' : '✅ Site is Live and Accessible' }}
+            </h3>
+            <p class="ad-maintenance-status__sub">
+              {{ maintenanceContent.maintenanceMode
+                ? 'Visitors are seeing your maintenance page right now.'
+                : 'Toggle maintenance mode on to show a holding page to all visitors.' }}
+            </p>
+          </div>
+        </div>
+        <button class="ad-maintenance-toggle"
+          [class.ad-maintenance-toggle--on]="maintenanceContent.maintenanceMode"
+          (click)="maintenanceContent.maintenanceMode = !maintenanceContent.maintenanceMode; saveContent('maintenance')">
+          {{ maintenanceContent.maintenanceMode ? 'Bring Site Back Online' : 'Enable Maintenance Mode' }}
+        </button>
+      </div>
+
+      <!-- Customise the maintenance page -->
+      <div class="ad-card">
+        <h3 class="ad-card__title">Customise Maintenance Page</h3>
+        <div class="ad-hint">These details appear on the page your visitors see while the site is down.</div>
+        <div class="ad-form-grid" style="margin-top:16px">
+          <div class="ad-field ad-field--full">
+            <label>Headline</label>
+            <input type="text" [(ngModel)]="maintenanceContent.maintenanceTitle"
+              placeholder="We'll be back soon"/>
+          </div>
+          <div class="ad-field ad-field--full">
+            <label>Message to visitors</label>
+            <textarea rows="3" [(ngModel)]="maintenanceContent.maintenanceMessage"
+              placeholder="We're making some improvements. Check back shortly."></textarea>
+          </div>
+          <div class="ad-field">
+            <label>Estimated back online (optional)</label>
+            <input type="text" [(ngModel)]="maintenanceContent.maintenanceEstimate"
+              placeholder="e.g. Friday 14 March · 10:00 AM"/>
+          </div>
+          <div class="ad-field">
+            <label>Show email notify form on maintenance page</label>
+            <div class="ad-toggle" style="margin-top:6px">
+              <input type="checkbox" id="mnt-notify" [(ngModel)]="maintenanceContent.maintenanceShowNotify"/>
+              <label class="ad-toggle__label" for="mnt-notify">Let visitors enter their email to be notified when site is back</label>
+            </div>
+          </div>
+        </div>
+        <button class="ad-save-btn" (click)="saveContent('maintenance')">Save Maintenance Page</button>
+      </div>
+
+      <!-- Preview -->
+      <div class="ad-card">
+        <h3 class="ad-card__title">Preview</h3>
+        <div class="ad-maintenance-preview">
+          <div class="ad-maintenance-preview__inner">
+            <p class="ad-maintenance-preview__icon">🔧</p>
+            <h2>{{ maintenanceContent.maintenanceTitle || "We'll be back soon" }}</h2>
+            <p>{{ maintenanceContent.maintenanceMessage || "We're making some improvements. Check back shortly." }}</p>
+            <p class="ad-maintenance-preview__eta" *ngIf="maintenanceContent.maintenanceEstimate">
+              ⏱ Expected back: {{ maintenanceContent.maintenanceEstimate }}
+            </p>
+            <div class="ad-maintenance-preview__notify" *ngIf="maintenanceContent.maintenanceShowNotify">
+              <input type="email" placeholder="your@email.com" disabled/>
+              <button disabled>Notify Me</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ══════════════════════════════════════════
+         ORDERS
+    ══════════════════════════════════════════ -->
+    <section *ngIf="activeSection==='orders'" class="ad-section">
+
+      <!-- Status filter tabs -->
+      <div class="ad-orders-filters">
+        <button class="ad-orders-filter" [class.active]="ordersFilter==='all'"         (click)="ordersFilter='all'">All <span>{{ orders.length }}</span></button>
+        <button class="ad-orders-filter" [class.active]="ordersFilter==='pending'"     (click)="ordersFilter='pending'">Pending <span>{{ ordersByStatus('pending') }}</span></button>
+        <button class="ad-orders-filter" [class.active]="ordersFilter==='confirmed'"   (click)="ordersFilter='confirmed'">Confirmed <span>{{ ordersByStatus('confirmed') }}</span></button>
+        <button class="ad-orders-filter" [class.active]="ordersFilter==='processing'"  (click)="ordersFilter='processing'">Processing <span>{{ ordersByStatus('processing') }}</span></button>
+        <button class="ad-orders-filter" [class.active]="ordersFilter==='shipped'"     (click)="ordersFilter='shipped'">Shipped <span>{{ ordersByStatus('shipped') }}</span></button>
+        <button class="ad-orders-filter" [class.active]="ordersFilter==='delivered'"   (click)="ordersFilter='delivered'">Delivered <span>{{ ordersByStatus('delivered') }}</span></button>
+        <button class="ad-orders-filter" [class.active]="ordersFilter==='cancelled'"   (click)="ordersFilter='cancelled'">Cancelled <span>{{ ordersByStatus('cancelled') }}</span></button>
+        <button class="ad-ql-btn" style="margin-left:auto" (click)="loadOrders()">↺ Refresh</button>
+      </div>
+
+      <!-- Loading -->
+      <div class="ad-empty" *ngIf="ordersLoading">Loading orders…</div>
+
+      <!-- Empty -->
+      <div class="ad-empty" *ngIf="!ordersLoading && filteredOrders.length === 0">
+        No orders found.
+      </div>
+
+      <!-- Orders Table -->
+      <div class="ad-card ad-orders-wrap" *ngIf="!ordersLoading && filteredOrders.length > 0">
+        <table class="ad-table ad-orders-table">
+          <thead>
+            <tr>
+              <th>Order #</th>
+              <th>Customer</th>
+              <th>Items</th>
+              <th>Total</th>
+              <th>Payment</th>
+              <th>Status</th>
+              <th>Date</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let o of filteredOrders" (click)="openOrder(o)" class="ad-orders-row">
+              <td class="ad-orders-num">{{ o.orderNumber || '—' }}</td>
+              <td>
+                <p class="ad-orders-name">{{ o.firstName }} {{ o.lastName }}</p>
+                <p class="ad-orders-email">{{ o.email }}</p>
+              </td>
+              <td>{{ o.items.length }} item{{ o.items.length !== 1 ? 's' : '' }}</td>
+              <td class="ad-orders-total">R{{ o.total | number:'1.2-2' }}</td>
+              <td (click)="$event.stopPropagation()">
+                <span class="ad-chip" [class.ad-chip--green]="o.paymentStatus==='paid'" [class.ad-chip--red]="o.paymentStatus==='failed'">
+                  {{ o.paymentMethod === 'cod' ? 'COD' : 'PayFast' }} · {{ o.paymentStatus }}
+                </span>
+                <button class="ad-mark-paid-btn" *ngIf="o.paymentMethod === 'cod' && o.paymentStatus !== 'paid'"
+                  (click)="markPaid(o)" [disabled]="updatingOrderId === o._id">
+                  Mark Paid
+                </button>
+              </td>
+              <style>
+                .ad-mark-paid-btn { display:block; margin-top:6px; padding:3px 10px; border-radius:4px; border:1px solid #CEC1A8; background:#F1EADA; color:#584739; font-size:11px; cursor:pointer; }
+                .ad-mark-paid-btn:hover { background:#E8DEC8; }
+                .ad-mark-paid-btn:disabled { opacity:0.5; cursor:default; }
+              </style>
+              <td>
+                <span class="ad-orders-status" [style.color]="statusColour(o.status)" [style.borderColor]="statusColour(o.status)">
+                  {{ o.status }}
+                </span>
+              </td>
+              <td class="ad-orders-date">{{ (o.createdAt | date:'dd MMM yy') || '—' }}</td>
+              <td (click)="$event.stopPropagation()">
+                <select class="ad-orders-select" [(ngModel)]="o.status"
+                  (change)="updateStatus(o, o.status)"
+                  [disabled]="updatingOrderId === o._id">
+                  <option value="pending">Pending</option>
+                  <option value="confirmed">Confirmed</option>
+                  <option value="processing">Processing</option>
+                  <option value="shipped">Shipped</option>
+                  <option value="delivered">Delivered</option>
+                  <option value="cancelled">Cancelled</option>
+                </select>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </section>
+
+    <!-- ══════════════════════════════════════════
+         SEO SETTINGS
+    ══════════════════════════════════════════ -->
+    <section *ngIf="activeSection==='seo'" class="ad-section">
+
+      <div class="ad-hint" style="margin-bottom:20px">
+        These settings control how each page appears in Google search results and when shared on social media (WhatsApp, Facebook, etc.). Leave a field blank to use the site default.
+      </div>
+
+      <!-- SEO Page Cards -->
+      <ng-container *ngFor="let page of [
+        { key: 'seo-home',     label: '🏠 Home Page',      model: seoHome },
+        { key: 'seo-about',    label: '📖 About Page',     model: seoAbout },
+        { key: 'seo-shop',     label: '👗 Shop Page',      model: seoShop },
+        { key: 'seo-blog',     label: '✍️ Blog Page',      model: seoBlog },
+        { key: 'seo-services', label: '⚙️ Services Page',  model: seoServices },
+        { key: 'seo-contact',  label: '📍 Contact Page',   model: seoContact }
+      ]">
+        <div class="ad-card ad-seo-card">
+          <div class="ad-seo-card__header">
+            <h3 class="ad-card__title">{{ page.label }}</h3>
+            <button class="ad-save-btn ad-save-btn--sm" (click)="saveContent(page.key)" [disabled]="saving">
+              {{ saving ? '…' : 'Save' }}
+            </button>
+          </div>
+
+          <div class="ad-form-grid">
+            <div class="ad-field ad-field--full">
+              <label>Page Title <span class="ad-hint-inline">Shown in browser tab and Google results</span></label>
+              <input type="text" [(ngModel)]="page.model.seoTitle"
+                [placeholder]="'e.g. NamakwaChic — ' + page.label.split(' ').slice(1).join(' ')"
+                maxlength="60"/>
+              <span class="ad-seo-counter" [class.ad-seo-counter--warn]="(page.model.seoTitle?.length || 0) > 50">
+                {{ page.model.seoTitle?.length || 0 }}/60
+              </span>
+            </div>
+
+            <div class="ad-field ad-field--full">
+              <label>Meta Description <span class="ad-hint-inline">Short summary shown under the title in Google</span></label>
+              <textarea rows="2" [(ngModel)]="page.model.seoDescription"
+                placeholder="e.g. Discover earthy, elegant fashion from the Namakwa desert. Shop our latest collection."
+                maxlength="160"></textarea>
+              <span class="ad-seo-counter" [class.ad-seo-counter--warn]="(page.model.seoDescription?.length || 0) > 140">
+                {{ page.model.seoDescription?.length || 0 }}/160
+              </span>
+            </div>
+
+            <div class="ad-field ad-field--full">
+              <label>Keywords <span class="ad-hint-inline">Comma-separated, optional</span></label>
+              <input type="text" [(ngModel)]="page.model.seoKeywords"
+                placeholder="fashion, South Africa, earthy style, women's clothing"/>
+            </div>
+
+            <div class="ad-field ad-field--full">
+              <label>Social Share Image URL <span class="ad-hint-inline">Shown when shared on WhatsApp, Facebook etc. Recommended: 1200×630px</span></label>
+              <input type="text" [(ngModel)]="page.model.seoOgImage"
+                placeholder="https://... (leave blank to use site default)"/>
+              <div class="ad-img-preview" *ngIf="page.model.seoOgImage" style="margin-top:8px">
+                <img [src]="page.model.seoOgImage" alt="OG preview" onerror="this.style.display='none'" style="height:80px;object-fit:cover;border-radius:3px"/>
+              </div>
+            </div>
+          </div>
+
+          <!-- Google Preview -->
+          <div class="ad-seo-preview">
+            <p class="ad-seo-preview__label">Google Preview</p>
+            <div class="ad-seo-preview__box">
+              <p class="ad-seo-preview__url">namakwachic.co.za</p>
+              <p class="ad-seo-preview__title">
+                {{ page.model.seoTitle ? page.model.seoTitle + ' | NamakwaChic' : 'NamakwaChic' }}
+              </p>
+              <p class="ad-seo-preview__desc">
+                {{ page.model.seoDescription || 'Curated fashion from the Namakwa desert. Discover our latest collections of earthy, elegant pieces.' }}
+              </p>
+            </div>
+          </div>
+
+        </div>
+      </ng-container>
+
+    </section>
+
+    <!-- ══════════════════════════════════════════
+         ANALYTICS
+    ══════════════════════════════════════════ -->
+    <section *ngIf="activeSection==='analytics'" class="ad-section">
+
+      <!-- Loading state -->
+      <div class="ad-empty" *ngIf="ordersLoading">Loading analytics…</div>
+
+      <ng-container *ngIf="!ordersLoading">
+
+        <!-- KPI Row -->
+        <div class="ad-analytics-kpis">
+          <div class="ad-kpi">
+            <span class="ad-kpi__icon">💰</span>
+            <div>
+              <p class="ad-kpi__value">R{{ totalRevenue | number:'1.0-0' }}</p>
+              <p class="ad-kpi__label">Total Revenue</p>
+            </div>
+          </div>
+          <div class="ad-kpi">
+            <span class="ad-kpi__icon">✅</span>
+            <div>
+              <p class="ad-kpi__value">R{{ paidRevenue | number:'1.0-0' }}</p>
+              <p class="ad-kpi__label">Confirmed Paid</p>
+            </div>
+          </div>
+          <div class="ad-kpi">
+            <span class="ad-kpi__icon">🛒</span>
+            <div>
+              <p class="ad-kpi__value">{{ orders.length }}</p>
+              <p class="ad-kpi__label">Total Orders</p>
+            </div>
+          </div>
+          <div class="ad-kpi">
+            <span class="ad-kpi__icon">📊</span>
+            <div>
+              <p class="ad-kpi__value">R{{ avgOrderValue | number:'1.0-0' }}</p>
+              <p class="ad-kpi__label">Avg Order Value</p>
+            </div>
+          </div>
+          <div class="ad-kpi">
+            <span class="ad-kpi__icon">👗</span>
+            <div>
+              <p class="ad-kpi__value">{{ totalItemsSold }}</p>
+              <p class="ad-kpi__label">Items Sold</p>
+            </div>
+          </div>
+          <div class="ad-kpi">
+            <span class="ad-kpi__icon">📧</span>
+            <div>
+              <p class="ad-kpi__value">{{ subscribers.length }}</p>
+              <p class="ad-kpi__label">Subscribers</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Charts row -->
+        <div class="ad-analytics-charts">
+
+          <!-- Revenue by Month -->
+          <div class="ad-card ad-chart-card">
+            <h3 class="ad-card__title">Revenue — Last 6 Months</h3>
+            <div class="ad-bar-chart" *ngIf="revenueByMonth.length > 0; else noData">
+              <div class="ad-bar-chart__bars">
+                <div class="ad-bar-chart__bar-wrap" *ngFor="let m of revenueByMonth">
+                  <div class="ad-bar-chart__bar"
+                    [style.height.%]="(m.revenue / maxMonthRevenue) * 100"
+                    [title]="'R' + (m.revenue | number:'1.0-0')">
+                    <span class="ad-bar-chart__val">R{{ m.revenue | number:'1.0-0' }}</span>
+                  </div>
+                  <p class="ad-bar-chart__label">{{ m.month }}</p>
+                </div>
+              </div>
+            </div>
+            <ng-template #noData><p class="ad-empty" style="padding:24px 0">No order data yet.</p></ng-template>
+          </div>
+
+          <!-- Orders by Status -->
+          <div class="ad-card ad-chart-card">
+            <h3 class="ad-card__title">Orders by Status</h3>
+            <div class="ad-status-chart" *ngIf="ordersByStatusChart.length > 0; else noData2">
+              <div class="ad-status-chart__item" *ngFor="let s of ordersByStatusChart">
+                <div class="ad-status-chart__label-row">
+                  <span class="ad-orders-status" [style.color]="s.colour" [style.borderColor]="s.colour">{{ s.label }}</span>
+                  <span class="ad-status-chart__count">{{ s.count }}</span>
+                </div>
+                <div class="ad-status-chart__bar">
+                  <div class="ad-status-chart__fill"
+                    [style.width.%]="(s.count / orders.length) * 100"
+                    [style.background]="s.colour">
+                  </div>
+                </div>
+              </div>
+            </div>
+            <ng-template #noData2><p class="ad-empty" style="padding:24px 0">No orders yet.</p></ng-template>
+          </div>
+
+        </div>
+
+        <!-- Top Products -->
+        <div class="ad-card" *ngIf="topProducts.length > 0">
+          <h3 class="ad-card__title">Top Products by Revenue</h3>
+          <div class="ad-top-products">
+            <div class="ad-top-product" *ngFor="let p of topProducts; let i = index">
+              <span class="ad-top-product__rank">{{ i + 1 }}</span>
+              <div class="ad-top-product__info">
+                <p class="ad-top-product__name">{{ p.name }}</p>
+                <div class="ad-top-product__bar">
+                  <div class="ad-top-product__fill"
+                    [style.width.%]="(p.revenue / maxProductRevenue) * 100">
+                  </div>
+                </div>
+              </div>
+              <div class="ad-top-product__stats">
+                <p class="ad-top-product__rev">R{{ p.revenue | number:'1.0-0' }}</p>
+                <p class="ad-top-product__qty">{{ p.qty }} sold</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Orders -->
+        <div class="ad-card" *ngIf="recentOrders.length > 0">
+          <div class="ad-seo-card__header">
+            <h3 class="ad-card__title">Recent Orders</h3>
+            <button class="ad-save-btn ad-save-btn--sm" (click)="setSection('orders')">View All →</button>
+          </div>
+          <table class="ad-table ad-orders-table">
+            <thead>
+              <tr><th>Order #</th><th>Customer</th><th>Total</th><th>Status</th><th>Date</th></tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let o of recentOrders" class="ad-orders-row" (click)="setSection('orders')">
+                <td class="ad-orders-num">{{ o.orderNumber }}</td>
+                <td>{{ o.firstName }} {{ o.lastName }}</td>
+                <td class="ad-orders-total">R{{ o.total | number:'1.2-2' }}</td>
+                <td><span class="ad-orders-status" [style.color]="statusColour(o.status)" [style.borderColor]="statusColour(o.status)">{{ o.status }}</span></td>
+                <td class="ad-orders-date">{{ (o.createdAt | date:'dd MMM yy') || '—' }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Empty state -->
+        <div class="ad-empty" *ngIf="orders.length === 0">
+          No orders yet — analytics will appear here once customers start purchasing.
+        </div>
+
+      </ng-container>
+    </section>
+
+    <!-- ══════════════════════════════════════════
+         HELP — SIZE GUIDE
+    ══════════════════════════════════════════ -->
+    <section *ngIf="activeSection==='help-sizing'" class="ad-section">
+      <div class="ad-card">
+        <h3 class="ad-card__title">📏 Size Guide Content</h3>
+        <div class="ad-hint" style="margin-bottom:16px">Edit the intro text and measurement descriptions. Size tables are managed separately in the page HTML.</div>
+        <div class="ad-form-grid">
+          <div class="ad-field ad-field--full">
+            <label>Page Intro</label>
+            <textarea rows="2" [(ngModel)]="helpSizing.sizingIntro" placeholder="Find your perfect fit. All measurements are in centimetres (cm)..."></textarea>
+          </div>
+          <div class="ad-field">
+            <label>Bust Measurement Description</label>
+            <textarea rows="2" [(ngModel)]="helpSizing.sizingHowToBust" placeholder="Measure around the fullest part of your chest..."></textarea>
+          </div>
+          <div class="ad-field">
+            <label>Waist Measurement Description</label>
+            <textarea rows="2" [(ngModel)]="helpSizing.sizingHowToWaist" placeholder="Measure around your natural waistline..."></textarea>
+          </div>
+          <div class="ad-field ad-field--full">
+            <label>Hip Measurement Description</label>
+            <textarea rows="2" [(ngModel)]="helpSizing.sizingHowToHips" placeholder="Measure around the fullest part of your hips..."></textarea>
+          </div>
+          <div class="ad-field ad-field--full">
+            <label>Measuring Note (shown below cards)</label>
+            <input type="text" [(ngModel)]="helpSizing.sizingNote" placeholder="Use a soft measuring tape and take measurements over light clothing..."/>
+          </div>
+          <div class="ad-field ad-field--full">
+            <label>"Still Not Sure?" text</label>
+            <textarea rows="2" [(ngModel)]="helpSizing.sizingStillNotSure" placeholder="Our team is happy to help..."></textarea>
+          </div>
+        </div>
+        <button class="ad-save-btn" (click)="saveContent('help-sizing')" [disabled]="saving">{{ saving ? 'Saving…' : 'Save Size Guide' }}</button>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════
+         HELP — SHIPPING & RETURNS
+    ══════════════════════════════════════════ -->
+    <section *ngIf="activeSection==='help-shipping'" class="ad-section">
+      <div class="ad-card">
+        <h3 class="ad-card__title">🚚 Shipping &amp; Returns Content</h3>
+        <div class="ad-form-grid">
+          <div class="ad-field ad-field--full">
+            <label>Page Intro</label>
+            <textarea rows="2" [(ngModel)]="helpShipping.shippingIntro" placeholder="We want your experience to be seamless..."></textarea>
+          </div>
+          <div class="ad-field">
+            <label>Free Delivery Threshold (R)</label>
+            <input type="number" [(ngModel)]="helpShipping.shippingFreeThreshold" placeholder="800"/>
+          </div>
+          <div class="ad-field">
+            <label>Flat Delivery Fee (R)</label>
+            <input type="number" [(ngModel)]="helpShipping.shippingFlatFee" placeholder="99"/>
+          </div>
+          <div class="ad-field">
+            <label>Estimated Delivery Time</label>
+            <input type="text" [(ngModel)]="helpShipping.shippingDays" placeholder="3–5 business days"/>
+          </div>
+          <div class="ad-field">
+            <label>Returns Window</label>
+            <input type="text" [(ngModel)]="helpShipping.returnsWindow" placeholder="30 days"/>
+          </div>
+          <div class="ad-field ad-field--full">
+            <label>Delivery Areas</label>
+            <textarea rows="2" [(ngModel)]="helpShipping.shippingAreas" placeholder="We currently deliver to all areas within South Africa..."></textarea>
+          </div>
+          <div class="ad-field ad-field--full">
+            <label>Returns Condition Requirements</label>
+            <textarea rows="2" [(ngModel)]="helpShipping.returnsCondition" placeholder="Items must be unworn, unwashed, with original tags..."></textarea>
+          </div>
+          <div class="ad-field ad-field--full">
+            <label>Faulty Item Policy</label>
+            <textarea rows="2" [(ngModel)]="helpShipping.returnsFaultyPolicy" placeholder="If you receive a faulty item, contact us within 7 days..."></textarea>
+          </div>
+          <div class="ad-field ad-field--full">
+            <label>Non-Returnable Items (comma-separated)</label>
+            <textarea rows="2" [(ngModel)]="helpShipping.returnsNonReturnableItems" placeholder="Sale items marked as final sale, Custom orders, Items that have been worn or washed"></textarea>
+          </div>
+        </div>
+        <button class="ad-save-btn" (click)="saveContent('help-shipping')" [disabled]="saving">{{ saving ? 'Saving…' : 'Save Shipping Content' }}</button>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════
+         HELP — FAQs
+    ══════════════════════════════════════════ -->
+    <section *ngIf="activeSection==='help-faqs'" class="ad-section">
+      <div class="ad-card">
+        <h3 class="ad-card__title">❓ FAQs Editor</h3>
+        <div class="ad-hint" style="margin-bottom:20px">Add, edit, remove and reorder FAQ entries. Each entry shows on the FAQs page as an expandable accordion item.</div>
+
+        <div class="ad-faq-editor">
+          <div class="ad-faq-item" *ngFor="let faq of faqList; let i = index">
+            <div class="ad-faq-item__header">
+              <span class="ad-faq-item__num">{{ i + 1 }}</span>
+              <div class="ad-faq-item__controls">
+                <button class="ad-faq-item__btn" (click)="moveFaq(i, -1)" [disabled]="i === 0" title="Move up">↑</button>
+                <button class="ad-faq-item__btn" (click)="moveFaq(i, 1)"  [disabled]="i === faqList.length - 1" title="Move down">↓</button>
+                <button class="ad-faq-item__btn ad-faq-item__btn--del" (click)="removeFaq(i)" title="Delete">✕</button>
+              </div>
+            </div>
+            <div class="ad-form-grid">
+              <div class="ad-field ad-field--full">
+                <label>Question</label>
+                <input type="text" [(ngModel)]="faq.q" placeholder="e.g. How long does delivery take?"/>
+              </div>
+              <div class="ad-field ad-field--full">
+                <label>Answer</label>
+                <textarea rows="3" [(ngModel)]="faq.a" placeholder="The answer shown when question is clicked..."></textarea>
+              </div>
+            </div>
+          </div>
+
+          <div class="ad-empty" *ngIf="faqList.length === 0" style="padding:20px 0">No FAQs yet. Add your first one below.</div>
+        </div>
+
+        <div style="display:flex;gap:12px;margin-top:16px;flex-wrap:wrap">
+          <button class="ad-ql-btn" (click)="addFaq()">+ Add FAQ</button>
+          <button class="ad-save-btn" (click)="saveFaqs()" [disabled]="saving">{{ saving ? 'Saving…' : 'Save All FAQs' }}</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── ORDER DETAIL DRAWER ── -->
+    <div class="ad-drawer-backdrop" *ngIf="selectedOrder" (click)="closeOrder()"></div>
+    <div class="ad-drawer-panel" *ngIf="selectedOrder">
+      <div class="ad-drawer-panel__header">
+        <div>
+          <h3>{{ selectedOrder.orderNumber }}</h3>
+          <span class="ad-orders-status"
+            [style.color]="statusColour(selectedOrder.status)"
+            [style.borderColor]="statusColour(selectedOrder.status)">
+            {{ selectedOrder.status }}
+          </span>
+        </div>
+        <button class="ad-drawer-panel__close" (click)="closeOrder()">✕</button>
+      </div>
+
+      <div class="ad-drawer-panel__body">
+
+        <!-- Customer -->
+        <div class="ad-drawer-section">
+          <p class="ad-drawer-label">Customer</p>
+          <p><strong>{{ selectedOrder.firstName }} {{ selectedOrder.lastName }}</strong></p>
+          <p>{{ selectedOrder.email }}</p>
+          <p>{{ selectedOrder.phone }}</p>
+        </div>
+
+        <!-- Delivery -->
+        <div class="ad-drawer-section">
+          <p class="ad-drawer-label">Deliver to</p>
+          <p>{{ selectedOrder.address }}<span *ngIf="selectedOrder.suburb">, {{ selectedOrder.suburb }}</span></p>
+          <p>{{ selectedOrder.city }}, {{ selectedOrder.province }}, {{ selectedOrder.postalCode }}</p>
+        </div>
+
+        <!-- Notes -->
+        <div class="ad-drawer-section" *ngIf="selectedOrder.notes">
+          <p class="ad-drawer-label">Order Notes</p>
+          <p class="ad-drawer-notes">{{ selectedOrder.notes }}</p>
+        </div>
+
+        <!-- Items -->
+        <div class="ad-drawer-section">
+          <p class="ad-drawer-label">Items</p>
+          <div class="ad-drawer-items">
+            <div class="ad-drawer-item" *ngFor="let item of selectedOrder.items">
+              <img *ngIf="item.image" [src]="item.image" [alt]="item.name"/>
+              <div class="ad-drawer-item__info">
+                <p>{{ item.name }}</p>
+                <p class="ad-drawer-item__meta">
+                  <span *ngIf="item.selectedSize">{{ item.selectedSize }}</span>
+                  × {{ item.quantity }}
+                </p>
+              </div>
+              <p class="ad-drawer-item__price">R{{ (item.price * item.quantity) | number:'1.2-2' }}</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Totals -->
+        <div class="ad-drawer-section">
+          <p class="ad-drawer-label">Totals</p>
+          <div class="ad-drawer-totals">
+            <div><span>Subtotal</span><span>R{{ selectedOrder.subtotal | number:'1.2-2' }}</span></div>
+            <div *ngIf="selectedOrder.discount > 0"><span>Discount</span><span style="color:#27ae60">−R{{ selectedOrder.discount | number:'1.2-2' }}</span></div>
+            <div><span>Delivery</span><span>{{ selectedOrder.deliveryFee === 0 ? 'FREE' : 'R' + (selectedOrder.deliveryFee | number:'1.2-2') }}</span></div>
+            <div class="ad-drawer-totals__total"><span>Total</span><span>R{{ selectedOrder.total | number:'1.2-2' }}</span></div>
+          </div>
+        </div>
+
+        <!-- Payment -->
+        <div class="ad-drawer-section">
+          <p class="ad-drawer-label">Payment</p>
+          <p>{{ selectedOrder.paymentMethod === 'cod' ? 'Cash on Delivery' : 'PayFast' }}
+            <span class="ad-chip" [class.ad-chip--green]="selectedOrder.paymentStatus==='paid'"
+              [class.ad-chip--red]="selectedOrder.paymentStatus==='failed'"
+              style="margin-left:8px">{{ selectedOrder.paymentStatus }}</span>
+          </p>
+          <p *ngIf="selectedOrder.promoCode" style="margin-top:6px; font-size:0.78rem; color:var(--mountain)">
+            Promo: {{ selectedOrder.promoCode }}
+          </p>
+        </div>
+
+        <!-- Update Status -->
+        <div class="ad-drawer-section">
+          <p class="ad-drawer-label">Update Status</p>
+          <div class="ad-drawer-status-btns">
+            <button *ngFor="let s of ['pending','confirmed','processing','shipped','delivered','cancelled']"
+              class="ad-drawer-status-btn"
+              [class.active]="selectedOrder.status === s"
+              [style.borderColor]="statusColour(s)"
+              [style.color]="selectedOrder.status === s ? '#fff' : statusColour(s)"
+              [style.background]="selectedOrder.status === s ? statusColour(s) : 'transparent'"
+              [disabled]="updatingOrderId === selectedOrder._id"
+              (click)="updateStatus(selectedOrder, $any(s))">
+              {{ s }}
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+</div>
