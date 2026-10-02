@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://YOUR-RAILWAY-APP.up.railway.app/api',
+  apiUrl: 'https://namaquachic-production.up.railway.app/api',
   firebase: {
     apiKey: "AIzaSyC8ypFC1WkTLe2f1zJ-NpWSc2W4LD6Nuug",
     authDomain: "namakwachic-982fb.firebaseapp.com",
