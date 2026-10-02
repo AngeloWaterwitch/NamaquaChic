@@ -7,9 +7,26 @@ const Order   = require('./models/Order');
 
 const app = express();
 
-// ── Middleware ──────────────────────────────────────────────────────
+// ── CORS ────────────────────────────────────────────────────────────
+// Trim whitespace and strip a trailing slash from both sides before
+// comparing — a plain string-equality origin check (the previous setup)
+// fails silently on any tiny formatting difference, with no indication
+// of why. This also logs the allowed origin at startup and anything it
+// actually blocks, so a mismatch is visible in the Railway logs instead
+// of being a mystery.
+const allowedOrigin = (process.env.FRONTEND_URL || 'http://localhost:4200').trim().replace(/\/$/, '');
+console.log('[cors] allowed origin =', JSON.stringify(allowedOrigin));
+
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:4200',
+  origin: (origin, callback) => {
+    // No Origin header = not a browser request (curl, Postman, the PayFast
+    // webhook calling back server-to-server) — always allow these through.
+    if (!origin) return callback(null, true);
+    const normalized = origin.trim().replace(/\/$/, '');
+    if (normalized === allowedOrigin) return callback(null, true);
+    console.warn('[cors] blocked origin:', JSON.stringify(origin), '— expected:', JSON.stringify(allowedOrigin));
+    callback(new Error('Not allowed by CORS'));
+  },
   credentials: true,
 }));
 app.use(express.json());
