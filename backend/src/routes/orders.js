@@ -119,6 +119,7 @@ router.patch('/:id/status', auth, async (req, res) => {
 // before anything is trusted: signature, server-to-server confirmation with
 // PayFast itself, and the paid amount against what the order actually costs.
 router.patch('/:id/payment', async (req, res) => {
+  console.log(`[payfast] webhook received for order ${req.params.id} — payment_status=${req.body.payment_status}, pf_payment_id=${req.body.pf_payment_id}`);
   try {
     if (!validSignature(req.body)) {
       console.warn('[payfast] signature mismatch for order', req.params.id);
@@ -132,7 +133,10 @@ router.patch('/:id/payment', async (req, res) => {
     }
 
     const order = await Order.findById(req.params.id);
-    if (!order) return res.status(404).json({ message: 'Order not found' });
+    if (!order) {
+      console.warn('[payfast] order not found:', req.params.id);
+      return res.status(404).json({ message: 'Order not found' });
+    }
 
     const paidAmount = parseFloat(req.body.amount_gross);
     if (!isNaN(paidAmount) && Math.abs(paidAmount - order.total) > 0.05) {
@@ -142,12 +146,14 @@ router.patch('/:id/payment', async (req, res) => {
 
     // Idempotent — PayFast retries the ITN until it gets a 200 back.
     if (order.paymentStatus === 'paid') {
+      console.log('[payfast] order already marked paid, skipping:', req.params.id);
       return res.status(200).send('OK');
     }
 
     order.paymentStatus = req.body.payment_status === 'COMPLETE' ? 'paid' : 'failed';
     if (order.paymentStatus === 'paid' && order.status === 'pending') order.status = 'confirmed';
     await order.save();
+    console.log(`[payfast] order ${req.params.id} updated — paymentStatus=${order.paymentStatus}`);
 
     res.status(200).send('OK');
   } catch (err) {
